@@ -1,0 +1,26 @@
+{
+  "name": "transport-registration-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marc0tjevp/Transport-Registration-API.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marc0tjevp/Transport-Registration-API/issues"
+  },
+  "homepage": "https://github.com/marc0tjevp/Transport-Registration-API#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "nodemon": "^1.17.5",
+    "npm": "^6.0.1"
+  }
+}
