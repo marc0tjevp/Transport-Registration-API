@@ -16,15 +16,17 @@ var testObject = {
 }
 
 mrnCollection.push(testObject)
+console.log(JSON.stringify(mrnCollection))
 
-var putObject= function(param){
+var putObject= function(req,res){
     console.log('Put in Array called')
-    mrnCollection.push(param)
+    mrnCollection.push(req)
 }
 
-var getObject = function(param){
+var getObject = (req,res)=>{
     console.log('getObject function called')
-    return mrnCollection[0]
+    res.send(JSON.stringify(mrnCollection))
+    res.end()
 }
 
 // var getAllObjects = (req,res)=>{

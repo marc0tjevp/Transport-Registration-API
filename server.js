@@ -2,16 +2,14 @@ var express = require('express')
 var app = express()
 var createError = require('http-errors')
 
-let mrn = require('./model/mrnObjects')
-let cargo = require('./model/Cargo')
+let company_routes=require('./routes/company_routes')
 
 app.get('/', function (req, res) {
     res.send('Hello World')
 })
 
-// app.get('/bedrijf/driver/:id', mrn.getAllObjects())
+app.use('/api/mrn', company_routes)
 
-// app.post('/bedrijf/driver/:id', mrn.putObject())
 
 app.get('/testObject',(req,res)=>{
     res.send({
@@ -35,3 +33,5 @@ var server = app.listen(8080, function () {
 
     console.log("Listening on port " + port)
 })
+
+module.exports = server

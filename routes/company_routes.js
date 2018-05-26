@@ -8,10 +8,12 @@ routes.post('/bedrijf/driver/:id/location')
 
 routes.get('/bedrijf/driver/:id/route')
 
-routes.get('/bedrijf/driver/:id')
+routes.get('/bedrijf/driver/:id', mrn.getObject)
 
 routes.post('/bedrijf/driver/:id')
 
 routes.post('/bedrijf/login')
 
 routes.post('/bedrijf/register')
+
+module.exports = routes
