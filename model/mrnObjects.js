@@ -1,7 +1,8 @@
 
 var mrnCollection = []
 
-var testObject = {
+var testObjectOne = {
+    "Id": "1",
 	"Mrn" : "123ABC",
 	"Status":"AllGood",
 	"Reference":"Referentie",
@@ -14,19 +15,41 @@ var testObject = {
 	"Currency":"BTC",
 	"TotaalGewicht":"100kilo"
 }
+var testObjectTwo = {
+    "Id": "2",
+	"Mrn" : "1234ABCD",
+	"Status":"AllGoodGood",
+	"Reference":"Referentiez",
+	"DateTime":"27Mei",
+	"Afzender":"amazon.com",
+	"Ontvanger":"Klant2",
+	"Opdrachtgever":"Keesje",
+	"AantalArtikelen":"4",
+	"Totaalbedrag":"40.00",
+	"Currency":"BTC",
+	"TotaalGewicht":"200kilo"
+}
 
-mrnCollection.push(testObject)
-console.log(JSON.stringify(mrnCollection))
+mrnCollection.push(testObjectOne)
+mrnCollection.push(testObjectTwo)
 
-var putObject= function(req,res){
+var putObject= (req,res)=>{
     console.log('Put in Array called')
     mrnCollection.push(req)
 }
 
 var getObject = (req,res)=>{
     console.log('getObject function called')
-    res.send(JSON.stringify(mrnCollection))
-    res.end()
+    console.log(req.params.id)
+    // var result= mrnCollection.find(x => x.Id == req.params.Id)
+    var result
+    for(i=0;i<mrnCollection.length;i++){
+        if(mrnCollection[i]['Id']== req.params.id){
+            result = mrnCollection[i]
+        }
+    }
+    console.log(result)
+    res.send(JSON.stringify(result))
 }
 
 // var getAllObjects = (req,res)=>{
