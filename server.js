@@ -1,6 +1,7 @@
 var express = require('express')
 var app = express()
 var createError = require('http-errors')
+var bodyParser = require('body-parser')
 
 let company_routes=require('./routes/company_routes')
 
@@ -9,6 +10,7 @@ app.get('/', function (req, res) {
 })
 
 app.use('/api/mrn', company_routes)
+app.use(bodyParser.json())
 
 var server = app.listen(8080, function () {
     var host = server.address().address

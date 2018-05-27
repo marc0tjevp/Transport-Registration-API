@@ -2,19 +2,20 @@ var mrnCollection = require('../data/mrn.json')
 
 // Pushes the object to the JSON
 var putObject = (req, res) => {
+	console.log('putObject called')
 
-	var driverID = request.body.driverID
-	var mrn = request.body.mrn
-	var status = request.body.status
-	var reference = request.body.reference
-	var dateTime = request.body.dateTime
-	var sender = request.body.sender
-	var receiver = request.body.receiver
-	var client = request.body.client
-	var amount = request.body.amount
-	var total = request.body.total
-	var currency = request.body.currency
-	var weight = request.body.weight
+	var driverID = req.body.driverID
+	var mrn = req.body.mrn
+	var status = req.body.status
+	var reference = req.body.reference
+	var dateTime = req.body.dateTime
+	var sender = req.body.sender
+	var receiver = req.body.receiver
+	var client = req.body.client
+	var amount = req.body.amount
+	var total = req.body.total
+	var currency = req.body.currency
+	var weight = req.body.weight
 
 	var form = {
 		"driverID": driverID,
