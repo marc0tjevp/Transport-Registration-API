@@ -59,7 +59,7 @@ var putObject = (req, res) => {
 var getObject = (req, res) => {
 	var result
 	for (i = 0; i < mrnCollection.forms.length; i++) {
-		if (mrnCollection.forms[i]['Id'] == req.params.id) {
+		if (mrnCollection.forms[i]['driverID'] == req.params.id) {
 			result = mrnCollection.forms[i]
 		}
 	}
