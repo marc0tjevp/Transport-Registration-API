@@ -10,7 +10,7 @@ routes.get('/bedrijf/driver/:id/route')
 
 routes.get('/bedrijf/driver/:id', mrn.getObject)
 
-routes.post('/bedrijf/driver/:id')
+routes.post('/bedrijf/driver/:id', mrn.putObject)
 
 routes.post('/bedrijf/login')
 
