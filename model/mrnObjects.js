@@ -1,4 +1,5 @@
 var mrnCollection = require('../data/mrn.json')
+const fs = require('fs')
 
 // Pushes the object to the JSON
 var putObject = (req, res) => {
@@ -33,7 +34,7 @@ var putObject = (req, res) => {
 	}
 	
 
-	fs.readFile("../data/mrn.json", 'utf-8', function (err, data) {
+	fs.readFile("./data/mrn.json", 'utf-8', function (err, data) {
 		if (err) {
 			console.log(err)
 		}
@@ -42,15 +43,14 @@ var putObject = (req, res) => {
 
 			dataSet.forms.push(form)
 
-			fs.writeFile("./data/messages.json", JSON.stringify(dataSet, null, 4), function (err) {
-				response.json(err)
+			fs.writeFile("./data/mrn.json", JSON.stringify(dataSet, null, 4), function (err) {
+				if (err) {
+					res.json(err).status(200)
+				} else {
+					res.json({"msg": "Added"}).status(200)
+				}
 			})
 
-			var reply = {
-				"msg": "Added form"
-			}
-
-			response.json(reply).status(200)
 		}
 	})
 }

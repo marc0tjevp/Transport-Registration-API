@@ -5,12 +5,13 @@ var bodyParser = require('body-parser')
 
 let company_routes=require('./routes/company_routes')
 
+app.use(bodyParser.json())
+
 app.get('/', function (req, res) {
     res.send('Hello World')
 })
 
 app.use('/api/mrn', company_routes)
-app.use(bodyParser.json())
 
 var server = app.listen(8080, function () {
     var host = server.address().address
