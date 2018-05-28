@@ -1,5 +1,4 @@
-const jwt = require('jsonwebtoken')
-
+const jwt = require('jwt-simple');
 const config = require('../config')
 
 function encodeToken(username) {
