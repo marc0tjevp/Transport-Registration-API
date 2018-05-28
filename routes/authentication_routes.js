@@ -1,6 +1,6 @@
 let routes = require('express').Router()
 
-routes.post('/form')
-routes.get('/form/:mrn')
+routes.post('/login')
+routes.post('/register')
 
 module.exports = routes

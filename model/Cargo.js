@@ -1,22 +1,22 @@
-class Cargo {
+var cargo = class Cargo {
 
     constructor(Mrn, Status, Reference, DateTime, Afzender, Ontvanger, Opdrachtgever,
                 AantalArtikelen, Totaalbedrag, Currency, TotaalGewicht){
-
-
-
-
-                    
+                    this.Mrn = Mrn
+                    this.Status = Status
+                    this.Reference = Reference
+                    this.DateTime = DateTime
+                    this.Afzender = Afzender
+                    this.Ontvanger = Ontvanger
+                    this.Opdrachtgever = Opdrachtgever
+                    this.AantalArtikelen  = AantalArtikelen
+                    this.Totaalbedrag = Totaalbedrag
+                    this.Currency = Currency
+                    this.TotaalGewicht = TotaalGewicht                       
                 }
 }
 
-
-
-
-
-
-
-
+module.exports.cargo = cargo;
 
 // public class Declaration
 // {

@@ -1,15 +1,18 @@
 let routes = require('express').Router()
+let controller = require('../controller/company_controller')
 
-routes.get('bedrijf/driver')
+routes.get('/driver')
 
-routes.post('/bedrijf/driver/:id/location')
+// Get Realtime location by Driver ID
+routes.post('/driver/:id/location')
 
-routes.get('/bedrijf/driver/:id/route')
+// Get Route by Driver Id
+routes.get('/driver/:id/route')
 
-routes.get('/bedrijf/driver/:id')
+// Gets a form by Driver ID
+routes.get('/driver/:id', controller.getObject)
 
-routes.post('/bedrijf/driver/:id')
+// Adds a form to a driver by ID
+routes.post('/driver/', controller.putObject)
 
-routes.post('/bedrijf/login')
-
-routes.post('/bedrijf/register')
+module.exports = routes
