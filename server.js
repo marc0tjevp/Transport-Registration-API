@@ -4,6 +4,9 @@ var app = express()
 var createError = require('http-errors')
 var bodyParser = require('body-parser')
 
+// Database
+var db = require('./database/database')
+
 // Route Files
 let company_routes = require('./routes/company_routes')
 let customs_routes = require('./routes/customs_routes')
