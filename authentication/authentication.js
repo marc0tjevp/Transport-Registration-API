@@ -5,10 +5,10 @@ const config = require('../config')
 function encodeToken(username) {
     const payload = {
         // exp: moment().add(2, 'days').unix(),
-        iat: moment().unix(),
+        iat: Date.now()/1000,
         sub: username
     }
-    return jwt.encode(payload, config.secret);
+    return jwt.encode(payload, config.secret)
 }
 
 function decodeToken(token, cb) {
@@ -17,15 +17,15 @@ function decodeToken(token, cb) {
         const payload = jwt.decode(token, config.secret)
 
         // Check if the token has expired. To do: Trigger issue in db ..
-        const now = moment().unix()
+        // const now = moment().unix()
 
         // Check if the token has expired
-        if (now > payload.exp) {
-            console.log('Token has expired.')
-        }
+        // if (now > payload.exp) {
+        //     console.log('Token has expired.')
+        // }
 
         // Return
-        return payload
+        // return payload
 
     } catch (err) {
         console.log(err)
