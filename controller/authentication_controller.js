@@ -7,6 +7,7 @@ function login(req, res) {
     //Undefined username/password, ff fixe
     var username = req.body.username || ''
     var password = req.body.password || ''
+    var imei =  req.body.imei || ''
 
     if (!password || !username) {
         res.json({
@@ -15,7 +16,7 @@ function login(req, res) {
         return
     }
 
-    db.query('SELECT username, password FROM user WHERE username = ?', [username], function (error, rows, fields) {
+    db.query('SELECT username, password, imei FROM user WHERE username = ?', [username], function (error, rows, fields) {
 
         // Handle Mysql Errors
         if (error) {
@@ -24,24 +25,27 @@ function login(req, res) {
 
         console.log(rows)
 
-        if (username == rows[0].username && password == rows[0].password) {
+        if (username == rows[0].username && password == rows[0].password && imei == rows[0].imei) {
             let token = auth.encodeToken(username)
+            console.log('Token: '+token + " entry: " + req.body.username + req.body.password + req.body.imei)
             res.status(200).json({
                 "message": token,
                 "status": 200,
                 "parameters": res.body
             })
         } else {
-            if (!rows[0]) {
-                res.send("No valid credentials")
-            } else if (username == rows[0].username && password == rows[0].password) {
-                let token = auth.encodeToken(username)
-                response.status(200).json({
-                    "message": token,
-                    "status": 200,
-                    "parameters": res.body
-                })
-            }
+            // if (!rows[0]) {
+            //     res.send("No valid credentials")
+            // } else if (username == rows[0].username && password == rows[0].password && imei == rows[0].imei) {
+            //     let token = auth.encodeToken(username)
+            //     response.status(200).json({
+            //         "message": token,
+            //         "status": 200,
+            //         "parameters": res.body
+            //     })
+            // }
+            res.send('No valid credentials or imei is incorrect')
+            console.log('Error login')
         }
     })
 
