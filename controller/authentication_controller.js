@@ -88,7 +88,6 @@ function register(req, res) {
         return
     }
 
-
     // Check if username already exists
     db.query(queryCheckUsername, function (error, rows, fields) {
 
@@ -97,6 +96,7 @@ function register(req, res) {
             res.json({
                 "msg": "username is already taken"
             })
+            return
         } else {
 
             // Insert new driver first
@@ -107,6 +107,7 @@ function register(req, res) {
                     res.json({
                         "msg": error
                     })
+                    return
                 } else {
 
                     // Get ID from just inserted driver
