@@ -31,7 +31,9 @@ function editUser(req,res){
         db.query(query,(err,response,fields)=>{
             if(err){
                 console.log('error occured in editUser query')
-                res.send(err)
+                res.json({
+                    error: err
+                })
             }
         })
         db.query('SELECT * FROM user WHERE userID = ?',[userID], function(error,rows,fields){
@@ -66,9 +68,13 @@ function deleteUser(req,res){
             }
         db.query(query,(err,response,fields)=>{
             if(err){
-                res.send(err)
-            }
-                res.send('Succesfully deleted user with ID: '+ userID)
+                res.json({
+                    error: err,
+                    message: "Succesfully deleted user"
+                })
+            }res.json({
+                message: "Succesfully deleted user"
+            })
             
         })
         } else {
@@ -107,7 +113,9 @@ function editDriver(req,res){
         db.query(query,(err,response,fields)=>{
             if(err){
                 console.log('error occured in editDriver query')
-                res.send(err)
+                res.json({
+                    error: err
+                })
             }
         })
         db.query('SELECT * FROM driver WHERE driverID = ?',[driverID], function(error,rows,fields){
