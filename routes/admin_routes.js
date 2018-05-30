@@ -1,9 +1,9 @@
 let routes = require('express').Router()
 let auth = require('../controller/admin_controller')
 
-routes.post('/edituser', auth.editUser)
-routes.post('/deleteuser', auth.deleteUser)
-routes.post('/editdriver', auth.editDriver)
-routes.post('/editimei', auth.editImei)
+routes.put('/edituser', auth.editUser)
+routes.delete('/deleteuser', auth.deleteUser)
+routes.put('/editdriver', auth.editDriver)
+routes.put('/editimei', auth.editImei)
 
 module.exports = routes

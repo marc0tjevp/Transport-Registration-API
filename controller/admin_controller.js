@@ -38,6 +38,9 @@ function editUser(req,res){
         })
         db.query('SELECT * FROM user WHERE userID = ?',[userID], function(error,rows,fields){
             console.log(rows)
+            res.json({
+                "message": "edit succesful"
+            })
         })
 
 }
@@ -69,31 +72,31 @@ function deleteUser(req,res){
         db.query(query,(err,response,fields)=>{
             if(err){
                 res.json({
-                    error: err,
-                    message: "Succesfully deleted user"
+                    "error": err
                 })
             }res.json({
-                message: "Succesfully deleted user"
+                "message": "Succesfully deleted user"
             })
             
         })
         } else {
             console.log('One or more credentials are incorrect, user cannot be deleted')
+            res.json({
+                "error:": "One or more credentials are incorrect, user cannot be deleted"
+            })
         }
     })
-    res.json({
-        status: 200
-    })
+   
 }
 
 function editDriver(req,res){
     console.log('editDriver function called')
 
-    var driverID = req.body.driverID || ''
+    var userID = req.body.userID || ''
     var firstname = req.body.firstname || ''
     var lastname = req.body.lastname || ''
 
-    if(!driverID || !firstname || !lastname){
+    if(userID==="" || firstname==="" || lastname===""){
         res.json({
             "message": "No parameters"
         })
@@ -101,29 +104,36 @@ function editDriver(req,res){
     }
 
 
-    db.query('SELECT * FROM driver WHERE driverID = ?',[driverID], function(error,rows,fields){
-        console.log(rows)
+    db.query('SELECT * FROM driver WHERE userID = ?',[userID], function(error,rows,fields){
+        if(!rows[0]){
+            res.json({
+                "Message": "No user found with this ID"
+            })
+        } else{
+            console.log(rows)
+            var query ={
+                sql: 'UPDATE driver SET firstname = ?, lastname = ? WHERE userID = ?',
+                values: [firstname, lastname, userID],
+                timeout : 3000
+            }
+            db.query(query,(err,response,fields)=>{
+                if(err){
+                    console.log('error occured in editDriver query')
+                    res.json({
+                        error: err
+                    })
+                }
+            })
+            db.query('SELECT * FROM driver WHERE userID = ?',[userID], function(error,rows,fields){
+                console.log(rows)
+            })
+            res.json({
+                status: 200
+            })
+        }  
     })
 
-        var query ={
-            sql: 'UPDATE driver SET firstname = ?, lastname = ? WHERE driverID = ?',
-            values: [firstname, lastname, driverID],
-            timeout : 3000
-        }
-        db.query(query,(err,response,fields)=>{
-            if(err){
-                console.log('error occured in editDriver query')
-                res.json({
-                    error: err
-                })
-            }
-        })
-        db.query('SELECT * FROM driver WHERE driverID = ?',[driverID], function(error,rows,fields){
-            console.log(rows)
-        })
-        res.json({
-            status: 200
-        })
+       
 }
 
 function editImei(req,res){
