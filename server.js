@@ -11,6 +11,7 @@ var db = require('./database/database')
 let company_routes = require('./routes/company_routes')
 let customs_routes = require('./routes/customs_routes')
 let authentication_routes = require('./routes/authentication_routes')
+let admin_routes = require('./routes/admin_routes')
 
 // Use Body Parser to get properties from body in posts
 app.use(bodyParser.json())
@@ -24,6 +25,7 @@ app.get('/', function (req, res) {
 app.use('/company', company_routes)
 app.use('/auth', authentication_routes)
 app.use('/customs', customs_routes)
+app.use('/admin', admin_routes)
 
 // Listen
 var server = app.listen(8080, function () {
