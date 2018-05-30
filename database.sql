@@ -13,41 +13,44 @@
 
 
 -- Dumping database structure for transport
+DROP DATABASE IF EXISTS `transport`;
 CREATE DATABASE IF NOT EXISTS `transport` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `transport`;
 
 -- Dumping structure for table transport.driver
+DROP TABLE IF EXISTS `driver`;
 CREATE TABLE IF NOT EXISTS `driver` (
   `driverID` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(128) NOT NULL,
   `lastname` varchar(128) NOT NULL,
-  PRIMARY KEY (`driverID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  `userID` int(11) NOT NULL,
+  PRIMARY KEY (`driverID`),
+  KEY `userID` (`userID`),
+  CONSTRAINT `user_userid` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table transport.driver: ~0 rows (approximately)
 /*!40000 ALTER TABLE `driver` DISABLE KEYS */;
-INSERT INTO `driver` (`driverID`, `firstname`, `lastname`) VALUES
-	(1, 'Marco', 'van Poortvliet'),
-	(2, 'Djim', 'Oomes');
+INSERT INTO `driver` (`driverID`, `firstname`, `lastname`, `userID`) VALUES
+	(1, 'Marco', 'van Poortvliet', 2),
+	(17, 'bob', 'the builder', 15);
 /*!40000 ALTER TABLE `driver` ENABLE KEYS */;
 
 -- Dumping structure for table transport.user
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `userID` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
-  `driverID` int(11) NOT NULL,
   `imei` varchar(50) NOT NULL,
-  PRIMARY KEY (`userID`),
-  KEY `FKdriver_user` (`driverID`),
-  CONSTRAINT `FKdriver_user` FOREIGN KEY (`driverID`) REFERENCES `driver` (`driverID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`userID`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
--- Dumping data for table transport.user: ~0 rows (approximately)
+-- Dumping data for table transport.user: ~1 rows (approximately)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`userID`, `username`, `password`, `driverID`, `imei`) VALUES
-	(1, 'djim', 'password', 2, '351859081530390'),
-	(4, 'marco', 'password', 1, '352859085230361');
+INSERT INTO `user` (`userID`, `username`, `password`, `imei`) VALUES
+	(2, 'marco', 'password', '345234582390455'),
+	(15, 'bob', 'password', '352859085230361');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
