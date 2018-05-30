@@ -41,11 +41,11 @@ function login(req, res) {
                 "status": 200
             })
         } else {
-            res.send('No valid credentials or imei is incorrect')
-            console.log('Error login')
+            res.json({
+                "msg": "No valid credentials or imei is incorrect"
+            })
         }
     })
-
 
 }
 
