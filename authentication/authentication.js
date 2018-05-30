@@ -24,7 +24,7 @@ function decodeToken(token, cb) {
         // }
 
         // Return
-        // return payload
+        return payload
 
     } catch (err) {
         console.log(err)

@@ -34,12 +34,14 @@ function login(req, res) {
 
         // Check if credentials match
         if (username == rows[0].username && password == rows[0].password && imei == rows[0].imei) {
-            let token = auth.encodeToken(username)
-            console.log('Token: ' + token + " entry: " + req.body.username + req.body.password + req.body.imei)
+
+            let token = auth.encodeToken(rows[0].userID)
+
             res.status(200).json({
                 "token": token,
                 "status": 200
             })
+
         } else {
             res.json({
                 "msg": "No valid credentials or imei is incorrect"
@@ -65,10 +67,10 @@ function register(req, res) {
         timeout: 300
     }
 
-    // Insert Driver Query
-    var queryDriver = {
-        sql: 'INSERT INTO `driver`(firstname, lastname) VALUES (?,?)',
-        values: [firstname, lastname],
+    // Insert User query
+    var queryUser = {
+        sql: 'INSERT INTO `user`(username, password, imei) VALUES (?, ?, ?)',
+        values: [username, password, imei],
         timeout: 3000
     }
 
@@ -100,7 +102,7 @@ function register(req, res) {
         } else {
 
             // Insert new driver first
-            db.query(queryDriver, function (error, result) {
+            db.query(queryUser, function (error, result) {
 
                 // Handle MySQL Errors
                 if (error) {
@@ -113,14 +115,15 @@ function register(req, res) {
                     // Get ID from just inserted driver
                     var resultID = result.insertId
 
-                    var queryUser = {
-                        sql: 'INSERT INTO `user`(username, password, driverID, imei) VALUES (?, ?, ?, ?)',
-                        values: [username, password, resultID, imei],
+                    // Insert Driver Query
+                    var queryDriver = {
+                        sql: 'INSERT INTO `driver`(firstname, lastname, userID) VALUES (?,?, ?)',
+                        values: [firstname, lastname, resultID],
                         timeout: 3000
                     }
 
                     // Insert new user with driverID from previous query
-                    db.query(queryUser, function (error, result) {
+                    db.query(queryDriver, function (error, result) {
                         if (!error) {
                             res.json({
                                 "msg": "registered new user"
