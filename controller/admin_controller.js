@@ -11,7 +11,7 @@ function editUser(req,res){
     var password = req.body.password || ''
     var imei = req.body.imei || ''
 
-    if(!username){
+    if(!username || !password || !imei){
         res.json({
             "message": "No parameters"
         })
@@ -75,13 +75,90 @@ function deleteUser(req,res){
             console.log('One or more credentials are incorrect, user cannot be deleted')
         }
     })
-    // db.query('SELECT * FROM user WHERE userID = ?', [userID], function(error,rows,fields){
-    //     console.log(rows)
-    //     // should return empty
-    // })
+    res.json({
+        status: 200
+    })
+}
+
+function editDriver(req,res){
+    console.log('editDriver function called')
+
+    var driverID = req.body.driverID || ''
+    var firstname = req.body.firstname || ''
+    var lastname = req.body.lastname || ''
+
+    if(!driverID || !firstname || !lastname){
+        res.json({
+            "message": "No parameters"
+        })
+        return
+    }
+
+
+    db.query('SELECT * FROM driver WHERE driverID = ?',[driverID], function(error,rows,fields){
+        console.log(rows)
+    })
+
+        var query ={
+            sql: 'UPDATE driver SET firstname = ?, lastname = ? WHERE driverID = ?',
+            values: [firstname, lastname, driverID],
+            timeout : 3000
+        }
+        db.query(query,(err,response,fields)=>{
+            if(err){
+                console.log('error occured in editDriver query')
+                res.send(err)
+            }
+        })
+        db.query('SELECT * FROM driver WHERE driverID = ?',[driverID], function(error,rows,fields){
+            console.log(rows)
+        })
+        res.json({
+            status: 200
+        })
+}
+
+function editImei(req,res){
+    console.log('editImei function called')
+
+    var userID = req.body.userID || ``
+    var imei = req.body.imei || ``
+
+    if(!userID || !imei){
+        res.json({
+            "message" : "Missing parameters, check if userID or imei is missing"
+        })
+    }
+
+    db.query('SELECT * FROM user WHERE userID = ?', [userID], function(error,rows,fields){
+        console.log(rows)
+    })
+
+    var query ={
+        sql: 'UPDATE user SET imei = ? WHERE userID = ?',
+        values: [imei, userID],
+        timeout : 3000
+    }
+    db.query(query,(err,response,fields)=>{
+        if(err){
+            console.log('error occured in editImei query')
+            res.json({
+                error : err
+            })
+        }
+        console.log('editImei succesfull')
+    })
+    db.query('SELECT * FROM user WHERE userID = ?',[userID], function(error,rows,fields){
+        console.log(rows)
+    })
+    res.json({
+        status: 200
+    })
 }
 
 module.exports = {
     editUser,
-    deleteUser
+    deleteUser,
+    editDriver,
+    editImei
 }
