@@ -1,6 +1,6 @@
 let routes = require('express').Router()
 
-routes.post('/form')
+// Gets a form from the customs (Mock-server)
 routes.get('/form/:mrn')
 
 module.exports = routes
