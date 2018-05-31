@@ -6,7 +6,11 @@ const auth = require('../authentication/authentication')
 var putObject = (req, res) => {
 	console.log('putObject called')
 
-	var driverID = req.body.driverID
+	var token = req.get('Authorization')
+	var subtoken = token.substr(7)
+	var decodedtoken = auth.decodeToken(subtoken)
+	var userID = decodedtoken.sub
+
 	var mrn = req.body.mrn
 	var status = req.body.status
 	var reference = req.body.reference
@@ -20,7 +24,7 @@ var putObject = (req, res) => {
 	var weight = req.body.weight
 
 	var form = {
-		"driverID": driverID,
+		"driverID": userID,
 		"mrn": mrn,
 		"status": status,
 		"reference": reference,
