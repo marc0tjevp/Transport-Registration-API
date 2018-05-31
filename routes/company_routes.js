@@ -10,9 +10,9 @@ routes.post('/driver/:id/location')
 routes.get('/driver/:id/route')
 
 // Gets a form by Driver ID
-routes.get('/driver/:id', controller.getObject)
+routes.get('/driver/get', controller.getObject)
 
 // Adds a form to a driver by ID
-routes.post('/driver/', controller.putObject)
+routes.post('/driver/add', controller.putObject)
 
 module.exports = routes

@@ -25,7 +25,7 @@ function login(req, res) {
     }
 
     // Execute select user query
-    db.query('SELECT username, password, imei FROM user WHERE username = ?', [username], function (error, rows, fields) {
+    db.query('SELECT userID, username, password, imei FROM user WHERE username = ?', [username], function (error, rows, fields) {
 
         // Handle Mysql Errors
         if (error) {
@@ -36,6 +36,8 @@ function login(req, res) {
         if (username == rows[0].username && password == rows[0].password && imei == rows[0].imei) {
 
             let token = auth.encodeToken(rows[0].userID)
+
+            console.log(rows[0])
 
             res.status(200).json({
                 "token": token,
