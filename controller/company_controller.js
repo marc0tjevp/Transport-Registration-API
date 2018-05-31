@@ -1,5 +1,6 @@
 var mrnCollection = require('../data/mrn.json')
 const fs = require('fs')
+const auth = require('../authentication/authentication')
 
 // Pushes the object to the JSON
 var putObject = (req, res) => {
@@ -32,7 +33,6 @@ var putObject = (req, res) => {
 		"currency": currency,
 		"weight": weight
 	}
-	
 
 	fs.readFile("./data/mrn.json", 'utf-8', function (err, data) {
 		if (err) {
@@ -47,7 +47,9 @@ var putObject = (req, res) => {
 				if (err) {
 					res.json(err).status(200)
 				} else {
-					res.json({"msg": "Added"}).status(200)
+					res.json({
+						"msg": "Added"
+					}).status(200)
 				}
 			})
 
@@ -57,9 +59,16 @@ var putObject = (req, res) => {
 
 // Gets the form with the driver ID
 var getObject = (req, res) => {
+
+	var token = req.get('Authorization')
+	var subtoken = token.substr(7)
+	var decodedtoken = auth.decodeToken(subtoken)
+
+	var userID = decodedtoken.sub
+
 	var result
 	for (i = 0; i < mrnCollection.forms.length; i++) {
-		if (mrnCollection.forms[i]['driverID'] == req.params.id) {
+		if (mrnCollection.forms[i]['driverID'] == userID) {
 			result = mrnCollection.forms[i]
 		}
 	}
@@ -69,5 +78,4 @@ var getObject = (req, res) => {
 module.exports = {
 	putObject,
 	getObject
-	// getAllObjects
 }

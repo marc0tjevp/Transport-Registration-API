@@ -1,30 +1,21 @@
 const jwt = require('jwt-simple');
 const config = require('../config')
+const moment = require('moment')
 
-function encodeToken(username) {
+function encodeToken(id) {
+
     const payload = {
-        // exp: moment().add(2, 'days').unix(),
-        iat: Date.now()/1000,
-        sub: username
+        sub: id
     }
+
     return jwt.encode(payload, config.secret)
 }
 
-function decodeToken(token, cb) {
+function decodeToken(token) {
 
     try {
-        const payload = jwt.decode(token, config.secret)
 
-        // Check if the token has expired. To do: Trigger issue in db ..
-        // const now = moment().unix()
-
-        // Check if the token has expired
-        // if (now > payload.exp) {
-        //     console.log('Token has expired.')
-        // }
-
-        // Return
-        return payload
+        return payload = jwt.decode(token, config.secret)
 
     } catch (err) {
         console.log(err)
