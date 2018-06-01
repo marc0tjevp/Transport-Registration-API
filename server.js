@@ -16,8 +16,15 @@ let admin_routes = require('./routes/admin_routes')
 // Use Body Parser to get properties from body in posts
 app.use(bodyParser.json())
 
+app.all('*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+  });
+
 // Hello World!
-app.get('/', function (req, res) {
+app.get('/', function (req, res, next) {
     res.send('Hello World')
 })
 
