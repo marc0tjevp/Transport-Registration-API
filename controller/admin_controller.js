@@ -50,43 +50,25 @@ function deleteUser(req, res) {
     console.log('deleteUser function called')
 
     var userID = req.body.userID || ''
-    var username = req.body.username || ''
-    var password = req.body.password || ''
 
-    db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
-
-        // Handle Mysql Errors
-        if (error) {
-            res.status(500).json(error)
-        }
-
-        console.log(rows)
-
-        if (username == rows[0].username && password == rows[0].password) {
-            console.log('Credentials matched')
-            var query = {
-                sql: 'DELETE FROM user WHERE userID = ?',
-                values: userID,
-                timeout: 3000
-            }
-            db.query(query, (err, response, fields) => {
-                if (err) {
-                    res.json({
-                        "error": err
-                    })
-                }
-                res.json({
-                    "message": "Succesfully deleted user"
-                })
-
-            })
-        } else {
-            console.log('One or more credentials are incorrect, user cannot be deleted')
+    var query = {
+        sql: 'DELETE FROM user WHERE userID = ?',
+        values: userID,
+        timeout: 3000
+    }
+    
+    db.query(query, (err, response, fields) => {
+        if (err) {
             res.json({
-                "error:": "One or more credentials are incorrect, user cannot be deleted"
+                "error": err
             })
         }
+        res.json({
+            "message": "Succesfully deleted user"
+        })
+
     })
+
 
 }
 
