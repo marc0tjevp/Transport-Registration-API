@@ -52,6 +52,14 @@ function deleteUser(req,res){
     var userID = req.body.userID || ''
     var username = req.body.username || ''
     var password = req.body.password || ''
+
+    if(!userID || userID == ''|| !username || username == '' || !password || password ==''){
+        res.status(412).json({
+            "message": "Please make sure all fields are filled in",
+            "status":"412"
+        })
+        return
+    }
     
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
 
