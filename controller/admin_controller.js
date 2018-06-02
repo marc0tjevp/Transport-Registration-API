@@ -15,7 +15,7 @@ function editUser(req, res) {
 
     if(!userID || !username || !password || !imei ||!firstname || !lastname){
         res.json({
-            "message": "No parameters"
+            "message": "Missing parameters"
         })
         return
     }
@@ -26,8 +26,8 @@ function editUser(req, res) {
     })
 
         var query ={
-            sql: 'UPDATE user SET username = ?, password = ?, imei = ?, firstname = ?, lastname = ? WHERE userID = ?',
-            values: [username, password, imei, firstname, lastname, userID],
+            sql: 'UPDATE user SET username = ?, password = ?, imei = ? WHERE userID = ?',
+            values: [username, password, imei, userID],
             timeout : 3000
         }
         db.query(query,(err,response,fields)=>{
@@ -38,18 +38,39 @@ function editUser(req, res) {
                 })
             }
         })
-        db.query('SELECT * FROM user WHERE userID = ?',[userID], function(error,rows,fields){
+
+    db.query('SELECT * FROM driver WHERE userID = ?',[userID], function(errorTwo, rowsTwo,fieldsTwo){
+        console.log(rowsTwo)
+    })
+
+        var queryTwo ={
+            sql: 'UPDATE driver SET firstname = ?, lastname = ? WHERE userID = ?',
+            values: [firstname, lastname, userID],
+            timeout : 3000
+        }
+        db.query(queryTwo,(err,response,fields)=>{
+            if(err){
+                console.log('error occured in editUser query')
+                res.json({
+                    "error": err
+                })
+            }
+        })
+
+        db.query('SELECT * FROM driver WHERE userID = ?',[userID], function(error,rows,fields){
             console.log(rows)
             res.json({
-                error: err
+                "error": error
             })
         })
+
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
         console.log(rows)
         res.json({
             "message": "edit succesful"
         })
     })
+    res.status(200)
 
 }
 
