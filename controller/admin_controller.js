@@ -10,8 +10,10 @@ function editUser(req,res){
     var username = req.body.username || ''
     var password = req.body.password || ''
     var imei = req.body.imei || ''
+    var firstname = req.body.firstname || ''
+    var lastname = req.body.lastname || ''
 
-    if(!username || !password || !imei){
+    if(!userID || !username || !password || !imei ||!firstname || !lastname){
         res.json({
             "message": "No parameters"
         })
@@ -24,8 +26,8 @@ function editUser(req,res){
     })
 
         var query ={
-            sql: 'UPDATE user SET username = ?, password = ?, imei = ? WHERE userID = ?',
-            values: [username, password, imei, userID],
+            sql: 'UPDATE user SET username = ?, password = ?, imei = ?, firstname = ?, lastname = ? WHERE userID = ?',
+            values: [username, password, imei, firstname, lastname, userID],
             timeout : 3000
         }
         db.query(query,(err,response,fields)=>{
@@ -50,12 +52,10 @@ function deleteUser(req,res){
     console.log('deleteUser function called')
 
     var userID = req.body.userID || ''
-    var username = req.body.username || ''
-    var password = req.body.password || ''
 
-    if(!userID || userID == ''|| !username || username == '' || !password || password ==''){
+    if(!userID || userID == ''){
         res.status(412).json({
-            "message": "Please make sure all fields are filled in",
+            "message": "Please make sure to give userID",
             "status":"412"
         })
         return
@@ -70,8 +70,6 @@ function deleteUser(req,res){
 
         console.log(rows)
 
-        if (username == rows[0].username && password == rows[0].password) {
-            console.log('Credentials matched')
             var query = {
                 sql: 'DELETE FROM user WHERE userID = ?',
                 values : userID,
@@ -79,20 +77,14 @@ function deleteUser(req,res){
             }
         db.query(query,(err,response,fields)=>{
             if(err){
-                res.json({
+                res.status(400).json({
                     "error": err
                 })
-            }res.json({
+            }res.status(200).json({
                 "message": "Succesfully deleted user"
             })
             
         })
-        } else {
-            console.log('One or more credentials are incorrect, user cannot be deleted')
-            res.json({
-                "error:": "One or more credentials are incorrect, user cannot be deleted"
-            })
-        }
     })
    
 }
