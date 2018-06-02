@@ -75,6 +75,8 @@ function register(req, res) {
     var lastname = req.body.lastname || ''
     var imei = req.body.imei || ''
 
+    console.log(username, password, firstname, lastname, imei)
+
     // Check Username Query
     var queryCheckUsername = {
         sql: 'SELECT username from user WHERE username = ?',
@@ -87,6 +89,7 @@ function register(req, res) {
         sql: 'INSERT INTO `user`(username, password, imei) VALUES (?, ?, ?)',
         values: [username, password, imei],
         timeout: 3000
+        
     }
 
     // Check if all parameters exist in body
