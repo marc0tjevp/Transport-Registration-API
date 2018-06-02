@@ -25,21 +25,13 @@ describe('Registration', () => {
                 res.should.be.json
                 validToken = res.body.token
             })
+            done()
 
         // Export token to use in other tests
         module.exports = {
             token: validToken
         }
-        done()
-    })
-
-    it('should return an error on GET request', (done) => {
-        chai.request(server)
-            .get('/auth/register')
-            .end(function (err, res) {
-                res.should.have.status(404)
-            })
-        done()
+       
     })
 
     it('should throw an error when the user already exists', (done) => {
@@ -55,8 +47,9 @@ describe('Registration', () => {
             .end(function (err, res) {
                 res.should.have.status(409)
                 res.should.be.json
+                done()
             })
-        done()
+        
     })
 
     it('should throw an error when no username is provided', (done) => {
@@ -71,8 +64,9 @@ describe('Registration', () => {
             .end(function (err, res) {
                 res.should.have.status(412)
                 res.should.be.json
+                done()
             })
-        done()
+        
     })
 
     it('should throw an error when no password is provided', (done) => {
@@ -87,8 +81,9 @@ describe('Registration', () => {
             .end(function (err, res) {
                 res.should.have.status(412)
                 res.should.be.json
+                done()
             })
-        done()
+        
     })
 
     it('should throw an error when no firstname is provided', (done) => {
@@ -103,8 +98,9 @@ describe('Registration', () => {
             .end(function (err, res) {
                 res.should.have.status(412)
                 res.should.be.json
+                done()
             })
-        done()
+        
     })
 
     it('should throw an error when no lastname is provided', (done) => {
@@ -119,8 +115,9 @@ describe('Registration', () => {
             .end(function (err, res) {
                 res.should.have.status(412)
                 res.should.be.json
+                done()
             })
-        done()
+        
     })
 
     it('should throw an error when no imei is provided', (done) => {
@@ -135,8 +132,9 @@ describe('Registration', () => {
             .end(function (err, res) {
                 res.should.have.status(412)
                 res.should.be.json
+                done()
             })
-        done()
+        
     })
     
 
@@ -147,31 +145,36 @@ describe('Registration', () => {
                 "firstname": "E",
                 "lastname": "de Vries",
                 "email": "someone2@domain.com",
-                "password": "passwordGoesHereM8"
+                "password": "passwordGoesHereM8",
+                "imei": "122356553"
             })
             .end(function (err, res) {
                 res.should.have.status(412)
                 res.should.be.json
                 validToken = res.body.token
+                done()
             })
-        done()
+        
     })
 
     it('should throw an error when lastname is shorter than 2 chars', (done) => {
         chai.request(server)
-            .post('/api/register')
+            .post('/auth/register')
             .send({
                 "firstname": "Henk",
                 "lastname": "V",
                 "email": "someone4@domain.com",
-                "password": "passwordGoesHereM8"
+                "password": "passwordGoesHereM8",
+                "imei": "122356553"
+                
             })
             .end(function (err, res) {
                 res.should.have.status(412)
                 res.should.be.json
                 validToken = res.body.token
+                done()
             })
-        done()
+        
     })
 
 })
@@ -191,8 +194,9 @@ describe('Login', () => {
                 res.should.have.status(200)
                 res.should.be.json
                 res.body.should.be.a('object')
+                done()
             })
-        done()
+        
     })
 
     it('should throw an error when username does not exist', (done) => {
@@ -207,13 +211,14 @@ describe('Login', () => {
                 res.should.have.status(401)
                 res.should.be.json
                 res.body.should.be.a('object')
+                done()
             })
-        done()
+        
     })
 
     it('should throw an error when username exists but password is invalid', (done) => {
         chai.request(server)
-            .post('/api/login')
+            .post('/auth/login')
             .send({
                 "email": "Janos",
                 "password": "badstuff",
@@ -222,23 +227,25 @@ describe('Login', () => {
             .end(function (err, res) {
                 res.should.have.status(401)
                 res.should.be.json
+                done()
             })
-        done()
+        
     })
 
     it('should throw an error when using an invalid imei', (done) => {
         chai.request(server)
-            .post('/api/login')
+            .post('/auth/login')
             .send({
                 "email": "Janos",
                 "password": "password",
                 "imei" : "111111111111"
             })
             .end(function (err, res) {
-                res.should.have.status(412)
+                res.should.have.status(401)
                 res.should.be.json
+                done()
             })
-        done()
+        
     })
 
 })

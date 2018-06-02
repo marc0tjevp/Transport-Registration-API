@@ -10,7 +10,8 @@ function login(req, res) {
 
     // Check if all parameters exist in body
     if (!password || !username || !imei) {
-        res.json({
+        res.status(412).json({
+            "status":"412",
             "msg": "please provide a username, password and IMEI to login"
         })
         return
@@ -18,11 +19,22 @@ function login(req, res) {
 
     // Check if all paramaters are filled in
     if (password == '' || username == '' || imei == '') {
-        res.json({
+        res.status(412).json({
+            "status":"412",
             "msg": "please provide a username, password and IMEI to login"
         })
         return
     }
+
+    //Check if username exists
+    db.query('SELECT * FROM user WHERE username = ?', [username], function (error, rows, fields){
+        if(!rows[0]){
+            res.status(401).json({
+                "status":"401",
+                "msg": "Username does not exist"
+            })
+        }
+    })
 
     // Execute select user query
     db.query('SELECT userID, username, password, imei FROM user WHERE username = ?', [username], function (error, rows, fields) {
@@ -44,8 +56,9 @@ function login(req, res) {
                 "status": 200
             })
 
-        } else {
-            res.json({
+        } else{
+            res.status(401).json({
+                "status":"401",
                 "msg": "No valid credentials or imei is incorrect"
             })
         }
@@ -66,7 +79,7 @@ function register(req, res) {
     var queryCheckUsername = {
         sql: 'SELECT username from user WHERE username = ?',
         values: [username],
-        timeout: 300
+        timeout: 3000
     }
 
     // Insert User query
@@ -78,7 +91,8 @@ function register(req, res) {
 
     // Check if all parameters exist in body
     if (!password || !username || !firstname || !lastname || !imei) {
-        res.json({
+        res.status(412).json({
+            "status":"412",
             "msg": "please provide a username, password, firstname, lastname and IMEI to register"
         })
         return
@@ -86,8 +100,18 @@ function register(req, res) {
 
     // Check if all paramaters are filled in
     if (password == '' || username == '' || firstname == '' || lastname == '' || imei == '') {
-        res.json({
+        res.status(412).json({
+            "status":"412",
             "msg": "please provide a username, password, firstname, lastname and IMEI to register"
+        })
+        return
+    }
+
+    //Check parameter's length
+    if(username.length <2 || firstname.length <2 || lastname.length <2 || password.length <2){
+        res.status(412).json({
+            "status":"412",
+            "msg": "Register credentials have to be 2 characters or more"
         })
         return
     }
@@ -97,7 +121,8 @@ function register(req, res) {
 
         // If there is a result, the username exists
         if (rows[0]) {
-            res.json({
+            res.status(409).json({
+                "status": "409",
                 "msg": "username is already taken"
             })
             return
