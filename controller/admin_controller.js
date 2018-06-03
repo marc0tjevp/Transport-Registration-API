@@ -10,10 +10,12 @@ function editUser(req, res) {
     var username = req.body.username || ''
     var password = req.body.password || ''
     var imei = req.body.imei || ''
+    var firstname = req.body.firstname || ''
+    var lastname = req.body.lastname || ''
 
-    if (!username || !password || !imei) {
+    if(!userID || !username || !password || !imei ||!firstname || !lastname){
         res.json({
-            "message": "No parameters"
+            "message": "Missing parameters"
         })
         return
     }
@@ -23,25 +25,52 @@ function editUser(req, res) {
         console.log(rows)
     })
 
-    var query = {
-        sql: 'UPDATE user SET username = ?, password = ?, imei = ? WHERE userID = ?',
-        values: [username, password, imei, userID],
-        timeout: 3000
-    }
-    db.query(query, (err, response, fields) => {
-        if (err) {
-            console.log('error occured in editUser query')
-            res.json({
-                error: err
-            })
+        var query ={
+            sql: 'UPDATE user SET username = ?, password = ?, imei = ? WHERE userID = ?',
+            values: [username, password, imei, userID],
+            timeout : 3000
         }
+        db.query(query,(err,response,fields)=>{
+            if(err){
+                console.log('error occured in editUser query')
+                res.json({
+                    error: err
+                })
+            }
+        })
+
+    db.query('SELECT * FROM driver WHERE userID = ?',[userID], function(errorTwo, rowsTwo,fieldsTwo){
+        console.log(rowsTwo)
     })
+
+        var queryTwo ={
+            sql: 'UPDATE driver SET firstname = ?, lastname = ? WHERE userID = ?',
+            values: [firstname, lastname, userID],
+            timeout : 3000
+        }
+        db.query(queryTwo,(err,response,fields)=>{
+            if(err){
+                console.log('error occured in editUser query')
+                res.json({
+                    "error": err
+                })
+            }
+        })
+
+        db.query('SELECT * FROM driver WHERE userID = ?',[userID], function(error,rows,fields){
+            console.log(rows)
+            res.json({
+                "error": error
+            })
+        })
+
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
         console.log(rows)
         res.json({
             "message": "edit succesful"
         })
     })
+    res.status(200)
 
 }
 
@@ -51,22 +80,38 @@ function deleteUser(req, res) {
 
     var userID = req.body.userID || ''
 
-    var query = {
-        sql: 'DELETE FROM user WHERE userID = ?',
-        values: userID,
-        timeout: 3000
+    if(!userID || userID == ''){
+        res.status(412).json({
+            "message": "Please make sure to give userID",
+            "status":"412"
+        })
+        return
     }
     
-    db.query(query, (err, response, fields) => {
-        if (err) {
-            res.json({
-                "error": err
-            })
-        }
-        res.json({
-            "message": "Succesfully deleted user"
-        })
+    db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
 
+        // Handle Mysql Errors
+        if (error) {
+            res.status(500).json(error)
+        }
+
+        console.log(rows)
+
+            var query = {
+                sql: 'DELETE FROM user WHERE userID = ?',
+                values : userID,
+                timeout : 3000
+            }
+        db.query(query,(err,response,fields)=>{
+            if(err){
+                res.status(400).json({
+                    "error": err
+                })
+            }res.status(200).json({
+                "message": "Succesfully deleted user"
+            })
+            
+        })
     })
 
 
