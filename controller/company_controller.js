@@ -1,85 +1,122 @@
 var mrnCollection = require('../data/mrn.json')
 const fs = require('fs')
 const auth = require('../authentication/authentication')
+const Error = require('../model/ApiError')
+const customs = require('./customs_controller')
+const http = require('http')
+const db = require('../database/database')
+
+// Register a driver to a form
+var registerDriver = (req, res) => {
+
+
+	var driverID = req.body.driverID || ''
+	var mrn = req.body.mrn || ''
+
+	var insertQuery = {
+		sql: 'INSERT INTO cargo_user(mrn, driverID) VALUES (?, ?)',
+		values: [mrn, driverID],
+		timeout: 3000
+	}
+
+	if (driverID == '' || mrn == '') {
+		res.status(419).json({
+			"msg": "Please provide a driverID and MRN"
+		}).end()
+	} else {
+
+		http.get({
+				hostname: 'localhost',
+				port: 8082,
+				path: '/mrn-form/' + mrn,
+				method: 'GET',
+				agent: false,
+				headers: {
+					'Content-Type': 'application/json',
+					'x-access-token': 'edaskjerds4234i'
+				}
+			}, (resp) => {
+				let data = ''
+
+				// gets all data
+				resp.on('data', (chunk) => {
+					data += chunk
+				})
+
+				resp.on('end', () => {
+					var object = JSON.parse(data)
+					if (object.mrn == mrn) {
+						db.query(insertQuery, function (error) {
+
+							if (error) {
+								var errCode = error.code || 'empty'
+								console.log(error)
+								if (errCode == 'ER_NO_REFERENCED_ROW_2') {
+									res.status(404).json({
+										"msg": "Driver does not exist"
+									}).end()
+								} else if (errCode == 'ER_DUP_ENTRY') {
+									res.status(409).json({
+										"msg": "MRN is already registered to a driver"
+									}).end()
+								} else if (error) {
+									res.json({
+										"msg": error
+									}).end()
+								}
+							} else {
+								res.json({
+									"msg": "Registered Driver to form"
+								}).end()
+							}
+						})
+					} else {
+						res.status(404).json({
+							"msg": "The form with this mrn does not exists"
+						})
+					}
+				})
+
+			})
+			.on("error", (err) => {
+				res.status(500).json(err).end()
+			})
+	}
+
+}
 
 // Pushes the object to the JSON
-var putObject = (req, res) => {
-	console.log('putObject called')
+var getFormsByDriver = (req, res) => {
 
 	var token = req.get('Authorization')
 	var subtoken = token.substr(7)
 	var decodedtoken = auth.decodeToken(subtoken)
 	var userID = decodedtoken.sub
 
-	var mrn = req.body.mrn
-	var status = req.body.status
-	var reference = req.body.reference
-	var dateTime = req.body.dateTime
-	var sender = req.body.sender
-	var receiver = req.body.receiver
-	var client = req.body.client
-	var amount = req.body.amount
-	var total = req.body.total
-	var currency = req.body.currency
-	var weight = req.body.weight
-
-	var form = {
-		"driverID": userID,
-		"mrn": mrn,
-		"status": status,
-		"reference": reference,
-		"dateTime": dateTime,
-		"sender": sender,
-		"receiver": receiver,
-		"client": client,
-		"amount": amount,
-		"total": total,
-		"currency": currency,
-		"weight": weight
+	if (userID == '') {
+		res.status(500).json({
+			"msg": "No userID found"
+		}).end()
 	}
 
-	fs.readFile("./data/mrn.json", 'utf-8', function (err, data) {
-		if (err) {
-			console.log(err)
-		}
-		if (typeof data !== "undefined") {
-			var dataSet = JSON.parse(data)
+	var selectQuery = {
+		sql: 'SELECT * FROM cargo_user INNER JOIN driver ON cargo_user.driverID = driver.driverID WHERE userID = ?',
+		values: [userID],
+		timeout: 3000
+	}
 
-			dataSet.forms.push(form)
-
-			fs.writeFile("./data/mrn.json", JSON.stringify(dataSet, null, 4), function (err) {
-				if (err) {
-					res.json(err).status(200)
-				} else {
-					res.json({
-						"msg": "Added"
-					}).status(200)
-				}
-			})
-
+	db.query(selectQuery, function (error, rows, fields) {
+		if (error) {
+			res.status(500).json({
+				"msg": error
+			}).end()
+		} else {
+			res.status(200).json(rows).end()
 		}
 	})
 }
 
-// Gets the form with the driver ID
-var getObject = (req, res) => {
-
-	var token = req.get('Authorization')
-	var subtoken = token.substr(7)
-	var decodedtoken = auth.decodeToken(subtoken)
-
-	var userID = decodedtoken.sub
-
-	var result
-	for (i = 0; i < mrnCollection.forms.length; i++) {
-		if (mrnCollection.forms[i]['driverID'] == userID) {
-			result = mrnCollection.forms[i]
-		}
-	}
-	res.json(result).status(200)
-}
-
 module.exports = {
-	putObject,
-	getObject
+	registerDriver,
+	getFormsByDriver
 }
