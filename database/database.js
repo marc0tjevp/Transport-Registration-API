@@ -4,7 +4,7 @@ let config = require('./db_config')
 let connection = mysql.createConnection({
     host: process.env.DB_HOST || config.dbHost,
     user: process.env.DB_USER || config.dbUser,
-    password: 'secret', //process.env.DB_PASSWORD,
+    password: '', //process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE || config.dbDatabase
 })
 
