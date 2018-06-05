@@ -1,11 +1,12 @@
 // Require
-var express = require('express')
-var app = express()
-var createError = require('http-errors')
-var bodyParser = require('body-parser')
+const express = require('express')
+const app = express()
+const createError = require('http-errors')
+const bodyParser = require('body-parser')
 const expressJWT = require('express-jwt')
 const config = require('./config.json')
 const expressSwagger = require('express-swagger-generator')(app)
+const isReachable = require('is-reachable');
 
 // Swagger UI
 let options = {
@@ -33,9 +34,6 @@ let options = {
     files: ['./routes/*.js'] //Path to the API handle folder
 };
 expressSwagger(options)
-
-// Database
-var db = require('./database/database')
 
 // Route Files
 let company_routes = require('./routes/company_routes')
@@ -72,12 +70,20 @@ app.use('/auth', authentication_routes)
 app.use('/customs', customs_routes)
 app.use('/admin', admin_routes)
 
-// Listen
-var server = app.listen(8080, function () {
-    var host = server.address().address
-    var port = server.address().port
+var server
 
-    console.log("Listening on port " + port)
+// Try to connect to Mock Server
+isReachable('localhost:8082').then(reachable => {
+    if (reachable) {
+        server = app.listen(8080, function () {
+            var host = server.address().address
+            var port = server.address().port
+
+            console.log("Listening on port " + port)
+        })
+    } else {
+        console.log("Mock Server not reachable - Server not started")
+    }
 })
 
 module.exports = server

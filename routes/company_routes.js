@@ -6,7 +6,7 @@ let controller = require('../controller/company_controller')
  * @group Company - Routes used by the company
  * @param {id} userID.required - The userID is extracted from the JWT token
  * @returns {object} 200 - An array of forms per driver
- * @returns {Error}  default - Unexpected error
+ * @returns {Error}  500 - Unexpected error
  */
 routes.get('/driver/get', controller.getFormsByDriver)
 
@@ -20,7 +20,7 @@ routes.get('/driver/get', controller.getFormsByDriver)
  * @returns {object} 404 - "msg": "The form with this mrn does not exists"
  * @returns {object} 404 - "msg": "Driver does not exist"
  * @returns {object} 409 - "msg": "MRN is already registered to a driver"
- * @returns {Error}  default - Unexpected error
+ * @returns {Error}  500 - Unexpected error
  */
 routes.post('/driver/register', controller.registerDriver)
 

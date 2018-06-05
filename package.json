@@ -21,6 +21,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
+    "is-reachable": "^2.4.0",
     "jsonwebtoken": "^8.2.1",
     "jwt-simple": "^0.5.1",
     "moment": "^2.22.1",
