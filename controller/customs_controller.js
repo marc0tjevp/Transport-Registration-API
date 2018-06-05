@@ -17,7 +17,7 @@ module.exports = {
                     'x-access-token': 'edaskjerds4234i'
                 }
             }, (resp) => {
-                let data = '';
+                let data = ''
 
                 // gets all data
                 resp.on('data', (chunk) => {
@@ -26,13 +26,13 @@ module.exports = {
 
                 // The whole response has been received. Print out the result.
                 resp.on('end', () => {
-                    res.status(resp.statusCode).json(JSON.parse(data)).end();
+                    res.status(resp.statusCode).json(JSON.parse(data)).end()
                 });
 
             })
             .on("error", (err) => {
                 res.status(500).json(err).end();
-            });
+            })
     },
     sendFreightReadyToMockserver(req, res, next) {
         let mrn = req.params.mrn;
