@@ -41,6 +41,12 @@ CREATE TABLE IF NOT EXISTS `driver` (
 INSERT INTO `driver` (`driverID`, `firstname`, `lastname`, `userID`) VALUES
 	(1, 'Marco', 'van Poortvliet', 2),
 	(17, 'bob', 'the builder', 15);
-	
-	
+
+DROP TABLE IF EXISTS `location`;
+CREATE TABLE IF NOT EXISTS `location` (
+  `locationID` int(11) NOT NULL AUTO_INCREMENT,
+  `long` decimal(128) NOT NULL,
+  PRIMARY KEY (`driverID`),
+  CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 	
