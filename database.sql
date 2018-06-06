@@ -13,9 +13,9 @@
 
 
 -- Dumping database structure for transport
-DROP DATABASE IF EXISTS `transport_test`;
-CREATE DATABASE IF NOT EXISTS `transport_test` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `transport_test`;
+DROP DATABASE IF EXISTS `transport`;
+CREATE DATABASE IF NOT EXISTS `transport` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `transport`;
 
 -- Dumping structure for table transport.user
 DROP TABLE IF EXISTS `user`;
