@@ -76,10 +76,11 @@ DROP TABLE IF EXISTS `drive_times`;
 CREATE TABLE IF NOT EXISTS `drive_times`(
   `startTime` varchar(128) NOT NULL,
   `endTime` varchar(128) NOT NULL,
+  `travelTime` varchar(128) NOT NULL,
   `mrn` varchar(128) NOT NULL,
   `driverID` int(11) NOT NULL,
   CONSTRAINT `FK_drive_times` FOREIGN KEY (`driverID`) REFERENCES `driver` (`driverID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `drive_times` (`startTime`,`endTime`,`mrn`,`driverID`) VALUES
-  ('12:00', '18:00','19NL92929212', 33);
+INSERT INTO `drive_times` (`startTime`,`endTime`, `travelTime`,`mrn`,`driverID`) VALUES
+  ('12:00', '18:00','03:45:09' ,'19NL92929212', 33);

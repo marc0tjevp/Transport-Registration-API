@@ -7,24 +7,25 @@ function sendDriveTimes(req,res){
     //Get params from body
     let startTime = req.body.startTime;
     let endTime = req.body.endTime;
+    let travelTime = req.body.travelTime;
     let mrn = req.body.mrn;
     let driverID = req.body.driverID;
 
     //Check if params exist
-    if (!startTime || !endTime || !mrn || !driverID) {
+    if (!startTime || !endTime || !mrn || !driverID || !travelTime) {
         res.status(412).json({
             "status":"412",
-            "msg": "Please make sure to insert startTime,endTime, mrn and driverID"
+            "msg": "Please make sure to insert startTime,endTime, travelTime, mrn and driverID"
         })
         res.end()
         return
     }
 
     // Check if all paramaters are filled in
-    if (startTime == '' || endTime == '' || mrn == '' || driverID == '') {
+    if (startTime == '' || endTime == '' || mrn == '' || driverID == '' || travelTime == '') {
         res.status(412).json({
             "status":"412",
-            "msg": "please provide a username, password and IMEI to login"
+            "msg": "Please make sure to insert startTime,endTime, travelTime, mrn and driverID"
         })
         res.end()
         return
@@ -44,8 +45,8 @@ function sendDriveTimes(req,res){
 
         // Execute select user query
         let query = {
-            sql: 'INSERT INTO `drive_times`(startTime, endTime, mrn, driverID) VALUES (?,?,?,?)',
-            values: [startTime, endTime, mrn, driverID],
+            sql: 'INSERT INTO `drive_times`(startTime, endTime, travelTime, mrn, driverID) VALUES (?,?,?,?,?)',
+            values: [startTime, endTime, travelTime, mrn, driverID],
             timeout: 3000
         }
         db.query(query, function (error, result) {
