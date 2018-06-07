@@ -17,6 +17,7 @@ function editUser(req, res) {
         res.json({
             "message": "Missing parameters"
         })
+        res.end()
         return
     }
 
@@ -36,6 +37,7 @@ function editUser(req, res) {
                 res.json({
                     error: err
                 })
+                res.end()
             }
         })
 
@@ -54,6 +56,7 @@ function editUser(req, res) {
                 res.json({
                     "error": err
                 })
+                res.end()
             }
         })
 
@@ -62,6 +65,7 @@ function editUser(req, res) {
             res.json({
                 "error": error
             })
+            res.end()
         })
 
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
@@ -71,7 +75,7 @@ function editUser(req, res) {
         })
     })
     res.status(200)
-
+    res.end()
 }
 
 //Delete user by ID, only deletes if username/password/id match
@@ -85,6 +89,7 @@ function deleteUser(req, res) {
             "message": "Please make sure to give userID",
             "status":"412"
         })
+        res.end()
         return
     }
     
@@ -93,6 +98,7 @@ function deleteUser(req, res) {
         // Handle Mysql Errors
         if (error) {
             res.status(500).json(error)
+            res.end()
         }
 
         console.log(rows)
@@ -107,9 +113,11 @@ function deleteUser(req, res) {
                 res.status(400).json({
                     "error": err
                 })
+                res.end()
             }res.status(200).json({
                 "message": "Succesfully deleted user"
             })
+            res.end()
             
         })
     })
@@ -128,6 +136,7 @@ function editDriver(req, res) {
         res.json({
             "message": "No parameters"
         })
+        res.end()
         return
     }
 
@@ -137,6 +146,7 @@ function editDriver(req, res) {
             res.json({
                 "Message": "No user found with this ID"
             })
+            res.end()
         } else {
             console.log(rows)
             var query = {
@@ -150,6 +160,7 @@ function editDriver(req, res) {
                     res.json({
                         error: err
                     })
+                    res.end()
                 }
             })
             db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (error, rows, fields) {
@@ -158,6 +169,7 @@ function editDriver(req, res) {
             res.json({
                 status: 200
             })
+            res.end()
         }
     })
 
@@ -174,6 +186,7 @@ function editImei(req, res) {
         res.json({
             "message": "Missing parameters, check if userID or imei is missing"
         })
+        res.end()
     }
 
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
@@ -191,6 +204,7 @@ function editImei(req, res) {
             res.json({
                 error: err
             })
+            res.end()
         }
         console.log('editImei succesfull')
     })
@@ -200,12 +214,15 @@ function editImei(req, res) {
     res.json({
         status: 200
     })
+    res.end()
 }
 
 function getAllUsers(req, res) {
     db.query('SELECT user.userID, driver.driverID, user.username, driver.firstname, driver.lastname, user.imei FROM user INNER JOIN driver ON user.userID = driver.userID', function (error, rows, fields) {
         res.json(rows)
+        res.end()
     })
+
 }
 
 module.exports = {

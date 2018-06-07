@@ -3,10 +3,11 @@ const db = require('../database/database')
 
 function login(req, res) {
 
+    console.log('Login function called')
     // Get parameters from body
-    var username = req.body.username || ''
-    var password = req.body.password || ''
-    var imei = req.body.imei || ''
+    let username = req.body.username || ''
+    let password = req.body.password || ''
+    let imei = req.body.imei || ''
 
     // Check if all parameters exist in body
     if (!password || !username || !imei) {
@@ -33,20 +34,34 @@ function login(req, res) {
                 "status":"401",
                 "msg": "Username does not exist"
             })
-        }
-    })
+            res.end()
+            return
+        } else {
 
     // Execute select user query
     db.query('SELECT userID, username, password, imei FROM user WHERE username = ?', [username], function (error, rows, fields) {
 
+        console.log(rows)
         // Handle Mysql Errors
         if (error) {
             res.status(500).json(error)
+            res.end()
+            return
         }
 
+        // if(!username || !password|| !imei ){
+        //     res.status(401).json({
+        //         "status":"401",
+        //         "msg": "No valid credentials or imei is incorrect"
+        //     })
+        //     res.end()
+        //     return
+        // }
+
+        
         // Check if credentials match
         if (username == rows[0].username && password == rows[0].password && imei == rows[0].imei) {
-
+            console.log('In the credentials match' +username + ' '+ password+ ' '+imei)
             let token = auth.encodeToken(rows[0].userID)
 
             console.log(rows[0])
@@ -55,37 +70,41 @@ function login(req, res) {
                 "token": token,
                 "status": 200
             })
+            res.end()
 
         } else{
             res.status(401).json({
                 "status":"401",
                 "msg": "No valid credentials or imei is incorrect"
             })
+            res.end()
         }
     })
 
+        }
+    })
 }
 
 function register(req, res) {
 
     // Get parameters from body
-    var username = req.body.username || ''
-    var password = req.body.password || ''
-    var firstname = req.body.firstname || ''
-    var lastname = req.body.lastname || ''
-    var imei = req.body.imei || ''
+    let username = req.body.username || ''
+    let password = req.body.password || ''
+    let firstname = req.body.firstname || ''
+    let lastname = req.body.lastname || ''
+    let imei = req.body.imei || ''
 
     console.log(username, password, firstname, lastname, imei)
 
     // Check Username Query
-    var queryCheckUsername = {
+    let queryCheckUsername = {
         sql: 'SELECT username from user WHERE username = ?',
         values: [username],
         timeout: 3000
     }
 
     // Insert User query
-    var queryUser = {
+    let queryUser = {
         sql: 'INSERT INTO `user`(username, password, imei) VALUES (?, ?, ?)',
         values: [username, password, imei],
         timeout: 3000
