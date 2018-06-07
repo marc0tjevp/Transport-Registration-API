@@ -14,7 +14,8 @@ function editUser(req, res) {
     var lastname = req.body.lastname || ''
 
     if(!userID || !username || !password || !imei ||!firstname || !lastname){
-        res.json({
+        res.status(412).json({
+            "status: ": "412",
             "message": "Missing parameters"
         }).end()
         return
@@ -33,8 +34,9 @@ function editUser(req, res) {
         db.query(query,(err,response,fields)=>{
             if(err){
                 console.log('error occured in editUser query')
-                res.json({
-                    error: err
+                res.status(500).json({
+                    "status: ": "500",
+                    "error": err
                 }).end()
             }
         })
@@ -51,7 +53,8 @@ function editUser(req, res) {
         db.query(queryTwo,(err,response,fields)=>{
             if(err){
                 console.log('error occured in editUser query')
-                res.json({
+                res.status(500).json({
+                    "status: ": "500",
                     "error": err
                 }).end()
             }
@@ -59,7 +62,8 @@ function editUser(req, res) {
 
         db.query('SELECT * FROM driver WHERE userID = ?',[userID], function(error,rows,fields){
             console.log(rows)
-            res.json({
+            res.status(500).json({
+                "status": "500",
                 "error": error
             }).end()
         })
@@ -103,7 +107,8 @@ function deleteUser(req, res) {
             }
         db.query(query,(err,response,fields)=>{
             if(err){
-                res.status(400).json({
+                res.status(500).json({
+                    "status": "500",
                     "error": err
                 }).end()
             }res.status(200).json({
@@ -124,7 +129,8 @@ function editDriver(req, res) {
     var lastname = req.body.lastname || ''
 
     if (userID === "" || firstname === "" || lastname === "") {
-        res.json({
+        res.status(412).json({
+            "status":"412",
             "message": "No parameters"
         }).end()
         return
@@ -133,7 +139,8 @@ function editDriver(req, res) {
 
     db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (error, rows, fields) {
         if (!rows[0]) {
-            res.json({
+            res.status(412).json({
+                "status: ": "412",
                 "Message": "No user found with this ID"
             }).end()
         } else {
@@ -146,7 +153,8 @@ function editDriver(req, res) {
             db.query(query, (err, response, fields) => {
                 if (err) {
                     console.log('error occured in editDriver query')
-                    res.json({
+                    res.status(500).json({
+                        "status: ": "500",
                         error: err
                     }).end()
                 }
@@ -170,7 +178,8 @@ function editImei(req, res) {
     var imei = req.body.imei || ``
 
     if (!userID || !imei) {
-        res.json({
+        res.status(412).json({
+            "status: ": "412",
             "message": "Missing parameters, check if userID or imei is missing"
         }).end()
     }
@@ -187,8 +196,9 @@ function editImei(req, res) {
     db.query(query, (err, response, fields) => {
         if (err) {
             console.log('error occured in editImei query')
-            res.json({
-                error: err
+            res.status(500).json({
+                "status: ": "500",
+                "error": err
             }).end()
         }
         console.log('editImei succesfull')
@@ -203,7 +213,7 @@ function editImei(req, res) {
 
 function getAllUsers(req, res) {
     db.query('SELECT user.userID, driver.driverID, user.username, driver.firstname, driver.lastname, user.imei FROM user INNER JOIN driver ON user.userID = driver.userID', function (error, rows, fields) {
-        res.json(rows).end()
+        res.status(200).json(rows).end()
     })
 
 }
