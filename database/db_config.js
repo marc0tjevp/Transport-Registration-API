@@ -1,5 +1,5 @@
 module.exports = {
     dbHost: "localhost",
-    dbUser: "banaan",
+    dbUser: "root",
     dbDatabase: "transport"
 }

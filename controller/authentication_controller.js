@@ -3,17 +3,18 @@ const db = require('../database/database')
 
 function login(req, res) {
 
+    console.log('Login function called')
     // Get parameters from body
-    var username = req.body.username || ''
-    var password = req.body.password || ''
-    var imei = req.body.imei || ''
+    let username = req.body.username || ''
+    let password = req.body.password || ''
+    let imei = req.body.imei || ''
 
     // Check if all parameters exist in body
     if (!password || !username || !imei) {
         res.status(412).json({
             "status":"412",
             "msg": "please provide a username, password and IMEI to login"
-        })
+        }).end()
         return
     }
 
@@ -22,7 +23,7 @@ function login(req, res) {
         res.status(412).json({
             "status":"412",
             "msg": "please provide a username, password and IMEI to login"
-        })
+        }).end()
         return
     }
 
@@ -32,21 +33,33 @@ function login(req, res) {
             res.status(401).json({
                 "status":"401",
                 "msg": "Username does not exist"
-            })
-        }
-    })
+            }).end()
+            return
+        } else {
 
     // Execute select user query
     db.query('SELECT userID, username, password, imei FROM user WHERE username = ?', [username], function (error, rows, fields) {
 
+        console.log(rows)
         // Handle Mysql Errors
         if (error) {
-            res.status(500).json(error)
+            res.status(500).json(error).end()
+            return
         }
 
+        // if(!username || !password|| !imei ){
+        //     res.status(401).json({
+        //         "status":"401",
+        //         "msg": "No valid credentials or imei is incorrect"
+        //     })
+        //     res.end()
+        //     return
+        // }
+
+        
         // Check if credentials match
         if (username == rows[0].username && password == rows[0].password && imei == rows[0].imei) {
-
+            console.log('In the credentials match' +username + ' '+ password+ ' '+imei)
             let token = auth.encodeToken(rows[0].userID)
 
             console.log(rows[0])
@@ -54,38 +67,40 @@ function login(req, res) {
             res.status(200).json({
                 "token": token,
                 "status": 200
-            })
+            }).end()
 
         } else{
             res.status(401).json({
                 "status":"401",
                 "msg": "No valid credentials or imei is incorrect"
-            })
+            }).end()
         }
     })
 
+        }
+    })
 }
 
 function register(req, res) {
 
     // Get parameters from body
-    var username = req.body.username || ''
-    var password = req.body.password || ''
-    var firstname = req.body.firstname || ''
-    var lastname = req.body.lastname || ''
-    var imei = req.body.imei || ''
+    let username = req.body.username || ''
+    let password = req.body.password || ''
+    let firstname = req.body.firstname || ''
+    let lastname = req.body.lastname || ''
+    let imei = req.body.imei || ''
 
     console.log(username, password, firstname, lastname, imei)
 
     // Check Username Query
-    var queryCheckUsername = {
+    let queryCheckUsername = {
         sql: 'SELECT username from user WHERE username = ?',
         values: [username],
         timeout: 3000
     }
 
     // Insert User query
-    var queryUser = {
+    let queryUser = {
         sql: 'INSERT INTO `user`(username, password, imei) VALUES (?, ?, ?)',
         values: [username, password, imei],
         timeout: 3000
@@ -106,7 +121,7 @@ function register(req, res) {
         res.status(412).json({
             "status":"412",
             "msg": "please provide a username, password, firstname, lastname and IMEI to register"
-        })
+        }).end()
         return
     }
 
@@ -115,7 +130,7 @@ function register(req, res) {
         res.status(412).json({
             "status":"412",
             "msg": "Register credentials have to be 2 characters or more"
-        })
+        }).end()
         return
     }
 
@@ -127,7 +142,7 @@ function register(req, res) {
             res.status(409).json({
                 "status": "409",
                 "msg": "username is already taken"
-            })
+            }).end()
             return
         } else {
 
@@ -138,7 +153,7 @@ function register(req, res) {
                 if (error) {
                     res.json({
                         "msg": error
-                    })
+                    }).end()
                     return
                 } else {
 
@@ -157,11 +172,11 @@ function register(req, res) {
                         if (!error) {
                             res.json({
                                 "msg": "registered new user"
-                            })
+                            }).end()
                         } else {
                             res.json({
                                 "msg": error
-                            })
+                            }).end()
                         }
                     })
                 }
