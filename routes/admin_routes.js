@@ -3,7 +3,7 @@ let auth = require('../controller/admin_controller')
 
 /**
  * Edit an existing user
- * @route POST /admin/edituser
+ * @route PUT /admin/edituser
  * @group Admin
  * @param {string} userID.required - The users ID
  * @param {string} username.required - Username
@@ -17,7 +17,7 @@ routes.put('/edituser', auth.editUser)
 
 /**
  * Delete a user
- * @route POST /admin/deleteuser
+ * @route DELETE /admin/deleteuser
  * @group Admin
  * @param {string} userID.required - The users ID
  * @param {string} username.required - Username
@@ -29,7 +29,7 @@ routes.delete('/deleteuser', auth.deleteUser)
 
 /**
  * Edits a driver (part of user)
- * @route POST /admin/editdriver
+ * @route PUT /admin/editdriver
  * @group Admin
  * @param {string} userID.required - The users ID
  * @param {string} firstname.required - New or old firstnem
@@ -40,7 +40,27 @@ routes.delete('/deleteuser', auth.deleteUser)
  * @returns {object}  500 - Unexpected error
  */
 routes.put('/editdriver', auth.editDriver)
+
+/**
+ * Edits a users GUID
+ * @route PUT /admin/editimei
+ * @group Admin
+ * @param {string} userID.required - The users ID
+ * @param {string} imei.required - The users GUID
+ * @return {object} 412 - Missing parameters, check if userID or imei is missing
+ * @return {object} 200 - Edit succesfull
+ * @returns {object}  500 - Unexpected error
+ */
 routes.put('/editimei', auth.editImei)
+
+/**
+ * Returns a join of users and drivers
+ * @route GET /admin/allusers
+ * @group Admin
+ * @return {object} 412 - Missing parameters, check if userID or imei is missing
+ * @return {object} 200 - Edit succesfull
+ * @returns {object}  500 - Unexpected error
+ */
 routes.get('/allusers', auth.getAllUsers)
 
 module.exports = routes
