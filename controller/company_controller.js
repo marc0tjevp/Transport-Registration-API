@@ -5,6 +5,7 @@ const Error = require('../model/ApiResponse')
 const customs = require('./customs_controller')
 const http = require('http')
 const db = require('../database/database')
+const ApiResponse = require('../model/ApiResponse')
 
 // Register a driver to a form
 var registerDriver = (req, res) => {
@@ -20,9 +21,7 @@ var registerDriver = (req, res) => {
 	}
 
 	if (driverID == '' || mrn == '') {
-		res.status(419).json({
-			"msg": "Please provide a driverID and MRN"
-		}).end()
+		res.status(419).json(new ApiResponse(419, "Missing Paramters, check if driverID or mrn is missing")).end()
 	} else {
 
 		http.get({
@@ -50,36 +49,25 @@ var registerDriver = (req, res) => {
 
 							if (error) {
 								var errCode = error.code || 'empty'
-								console.log(error)
 								if (errCode == 'ER_NO_REFERENCED_ROW_2') {
-									res.status(404).json({
-										"msg": "Driver does not exist"
-									}).end()
+									res.status(404).json(new ApiResponse(404, "Driver does not exist")).end()
 								} else if (errCode == 'ER_DUP_ENTRY') {
-									res.status(409).json({
-										"msg": "MRN is already registered to a driver"
-									}).end()
+									res.status(409).json(new ApiResponse(409, "MRN is already registered to a driver")).end()
 								} else if (error) {
-									res.json({
-										"msg": error
-									}).end()
+									res.status(500).json(new ApiResponse(500, error)).end()
 								}
 							} else {
-								res.json({
-									"msg": "Registered Driver to form"
-								}).end()
+								res.status(200).json(new ApiResponse(200, "Registered driver to form")).end()
 							}
 						})
 					} else {
-						res.status(404).json({
-							"msg": "The form with this mrn does not exists"
-						}).end()
+						res.status(404).json(new ApiResponse(404, "A form with this MRN does not exist")).end()
 					}
 				})
 
 			})
 			.on("error", (err) => {
-				res.status(500).json(err).end()
+				res.status(500).json(new ApiResponse(500, err)).end()
 			})
 	}
 
@@ -94,9 +82,7 @@ var getFormsByDriver = (req, res) => {
 	var userID = decodedtoken.sub
 
 	if (userID == '') {
-		res.status(500).json({
-			"msg": "No userID found"
-		}).end()
+		res.status(419).json(new ApiResponse(419, "Missing Parameters, check if userID is missing")).end()
 	}
 
 	var selectQuery = {
@@ -107,11 +93,9 @@ var getFormsByDriver = (req, res) => {
 
 	db.query(selectQuery, function (error, rows, fields) {
 		if (error) {
-			res.status(500).json({
-				"msg": error
-			}).end()
+			res.status(500).json(new ApiResponse(500, error)).end()
 		} else {
-			res.status(200).json(rows).end()
+			res.status(200).json(new ApiResponse(200, rows)).end()
 		}
 	})
 }

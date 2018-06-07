@@ -10,11 +10,10 @@ let controller = require('../controller/driver_controller')
  * @param {string} travelTime.required
  * @param {string} mrn.required
  * @param {string} driverID.required
- * @return {object} 412 - Please make sure to insert startTime,endTime, travelTime, mrn and driverID
- * @return {object} 401 - Driver does not exist
- * @return {object} 500 - SQL error occured
- * @return {object} 200 - Successfully added drivetimes
- * @return {object}  500 - Unexpected error
+ * @return {ApiResponse.model} 412 - Please make sure to insert startTime,endTime, travelTime, mrn and driverID
+ * @return {ApiResponse.model} 401 - Driver does not exist
+ * @return {ApiResponse.model} 200 - Successfully added drivetimes
+ * @return {ApiResponse.model} 500 - Unexpected error
  */
 routes.post('/senddrive', controller.sendDriveTimes)
 
@@ -23,11 +22,10 @@ routes.post('/senddrive', controller.sendDriveTimes)
  * @route GET /drivetimes/senddrive
  * @group Drive Times
  * @param {string} driverID.required
- * @return {object} 412 - Please make sure driverID is filled in
- * @return {object} 401 - Drive times for this driverID does not exist
- * @return {object} 500 - An error occured in the SQL query
- * @return {object} 200 - {Object object}
- * @return {object}  500 - Unexpected error
+ * @return {ApiResponse.model} 412 - Missing Parameters, check if driverID is missin
+ * @return {ApiResponse.model} 401 - There are no drivetimes for this driver
+ * @return {ApiResponse.model} 200 - []
+ * @return {ApiResponse.model} 500 - Unexpected error
  */
 routes.get('/getdrivebyid/:id', controller.getDriveTimeID)
 

@@ -2,29 +2,27 @@ let routes = require('express').Router()
 let controller = require('../controller/location_controller')
 
 /**
- * Login to the API with username, password and GUID
- * @route POST /location/:mrn
- * @group location
+ * Post a drivers location to the database
+ * @route POST /location/post/:mrn
+ * @group Location
  * @param {string} lat.required - Latitude of the location
  * @param {string} long.required - Longitude of the location
  * @param {string} dateTime.required - Date and time of the location
- * @returns {object} 200 - "status": success
- * @returns {object} 412 - "msg": "Please define alle required data"
- * @returns {object} 404 - "msg": "mrn not found in db"
- * @returns {object} 401 - "msg": "No valid credentials or imei is incorrect"
- * @returns {object} 500 - Unexpected error
+ * @returns {ApiResponse.model} 200 - Added location into database
+ * @returns {ApiResponse.model} 412 - Parameters missing, please check if mrn, latitude, longitude or datetime is missing
+ * @returns {ApiResponse.model} 404 - There are no location pointers for this MRN
+ * @returns {ApiResponse.model} 500 - Unexpected error
  */
-routes.post('/:mrn', controller.insertLocation)
+routes.post('/post/:mrn', controller.insertLocation)
 
 /**
- * Login to the API with username, password and GUID
- * @route GET /location/:mrn
- * @group location
- * @returns {object} 200 - "status": array of locations containing long, lat and the dateTime
- * @returns {object} 404 - "msg": "mrn not found in db"
- * @returns {object} 401 - "msg": "No valid credentials or imei is incorrect"
- * @returns {object} 500 - Unexpected error
+ * Get a drivers location from the database
+ * @route GET /location/get/:mrn
+ * @group Location
+ * @returns {ApiResponse.model} 200 - []
+ * @returns {ApiResponse.model} 404 - There are no location pointers for this MRN
+ * @returns {ApiResponse.model} 500 - Unexpected error
  */
-routes.get('/:mrn', controller.getLocations)
+routes.get('/get/:mrn', controller.getLocations)
 
 module.exports = routes
