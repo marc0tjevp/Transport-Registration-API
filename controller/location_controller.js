@@ -1,4 +1,5 @@
-modules.export = {
+module.exports = {
+    
     insertLocation(req, res) {
         let mrn = req.params.mrn
         let body = req.body
@@ -10,7 +11,9 @@ modules.export = {
                 if (error) {
                     res.status(500).json(error).end()
                 } else if (rows.length > 0) {
-                    db.query('INSERT INTO location (mrn, lat, long, date) VALUES (?)', [[mrn, lat, long, date]], function (error, rows, fields) {
+                    db.query('INSERT INTO location (mrn, lat, long, date) VALUES (?)', [
+                        [mrn, lat, long, date]
+                    ], function (error, rows, fields) {
                         if (error) {
                             res.status(500).json(error).end()
                         } else {

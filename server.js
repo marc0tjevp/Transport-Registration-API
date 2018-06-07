@@ -41,7 +41,7 @@ let customs_routes = require('./routes/customs_routes')
 let authentication_routes = require('./routes/authentication_routes')
 let admin_routes = require('./routes/admin_routes')
 let drivetime_routes = require('./routes/drivetime_routes')
-let location_routes = require('./routes/locaton_routes')
+let location_routes = require('./routes/location_routes')
 
 // Use Body Parser to get properties from body in posts
 app.use(bodyParser.json())
