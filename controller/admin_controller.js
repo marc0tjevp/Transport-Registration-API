@@ -1,5 +1,6 @@
 const db = require('../database/database')
 const auth = require('../authentication/authentication')
+const ApiResponse = require('../model/ApiResponse')
 
 //Edits user by ID, fill any other value with new value to update
 //If some values need to go unchanged, enter the old values
@@ -13,68 +14,55 @@ function editUser(req, res) {
     var firstname = req.body.firstname || ''
     var lastname = req.body.lastname || ''
 
-    if(!userID || !username || !password || !imei ||!firstname || !lastname){
-        res.status(412).json({
-            "status: ": "412",
-            "message": "Missing parameters"
-        }).end()
+    if (!userID || !username || !password || !imei || !firstname || !lastname) {
+        res.status(412).json(new ApiResponse(412, "Missing parameters, check if userId, username, password, imei, firstname or lastname is missing")).end()
         return
     }
 
-
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
         console.log(rows)
     })
 
-        var query ={
-            sql: 'UPDATE user SET username = ?, password = ?, imei = ? WHERE userID = ?',
-            values: [username, password, imei, userID],
-            timeout : 3000
-        }
-        db.query(query,(err,response,fields)=>{
-            if(err){
-                console.log('error occured in editUser query')
-                res.status(500).json({
-                    "status: ": "500",
-                    "error": err
-                }).end()
-            }
-        })
+    var query = {
+        sql: 'UPDATE user SET username = ?, password = ?, imei = ? WHERE userID = ?',
+        values: [username, password, imei, userID],
+        timeout: 3000
+    }
 
-    db.query('SELECT * FROM driver WHERE userID = ?',[userID], function(errorTwo, rowsTwo,fieldsTwo){
+    db.query(query, (err, response, fields) => {
+        if (err) {
+            res.status(500).json(new ApiResponse(500, err)).end()
+        }
+    })
+
+    db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (errorTwo, rowsTwo, fieldsTwo) {
         console.log(rowsTwo)
     })
 
-        var queryTwo ={
-            sql: 'UPDATE driver SET firstname = ?, lastname = ? WHERE userID = ?',
-            values: [firstname, lastname, userID],
-            timeout : 3000
-        }
-        db.query(queryTwo,(err,response,fields)=>{
-            if(err){
-                console.log('error occured in editUser query')
-                res.status(500).json({
-                    "status: ": "500",
-                    "error": err
-                }).end()
-            }
-        })
+    var queryTwo = {
+        sql: 'UPDATE driver SET firstname = ?, lastname = ? WHERE userID = ?',
+        values: [firstname, lastname, userID],
+        timeout: 3000
+    }
 
-        db.query('SELECT * FROM driver WHERE userID = ?',[userID], function(error,rows,fields){
-            console.log(rows)
-            res.status(500).json({
-                "status": "500",
-                "error": error
-            }).end()
-        })
+    db.query(queryTwo, (err, response, fields) => {
+        if (err) {
+            res.status(500).json(new ApiResponse(500, err)).end()
+        }
+    })
+
+    db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (error, rows, fields) {
+        res.status(500).json(new ApiResponse(500, error)).end()
+    })
 
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
-        console.log(rows)
-        res.status(200).json({
-            "message": "edit succesful"
-        }).end()
+        if (!error) {
+            res.status(200).json(new ApiResponse(200, "Edit succesfull")).end()
+        } else {
+            res.status(500).json(new ApiResponse(500, error)).end()
+        }
     })
-    
+
 }
 
 //Delete user by ID, only deletes if username/password/id match
@@ -83,38 +71,29 @@ function deleteUser(req, res) {
 
     var userID = req.body.userID || ''
 
-    if(!userID || userID == ''){
-        res.status(412).json({
-            "message": "Please make sure to give userID",
-            "status":"412"
-        }).end()
+    if (!userID || userID == '') {
+        res.status(412).json(new ApiResponse(412, "Please provide a userID")).end()
         return
     }
-    
+
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
 
         // Handle Mysql Errors
         if (error) {
-            res.status(500).json(error).end()
+            res.status(500).json(new ApiResponse(500, err)).end()
         }
 
-        console.log(rows)
+        var query = {
+            sql: 'DELETE FROM user WHERE userID = ?',
+            values: userID,
+            timeout: 3000
+        }
 
-            var query = {
-                sql: 'DELETE FROM user WHERE userID = ?',
-                values : userID,
-                timeout : 3000
+        db.query(query, (err, response, fields) => {
+            if (err) {
+                res.status(500).json(new ApiResponse(500, err)).end()
             }
-        db.query(query,(err,response,fields)=>{
-            if(err){
-                res.status(500).json({
-                    "status": "500",
-                    "error": err
-                }).end()
-            }res.status(200).json({
-                "message": "Succesfully deleted user"
-            }).end()
-            
+            res.status(200).json(new ApiResponse(200, "Succesfully deleted user")).end()
         })
     })
 
@@ -129,20 +108,13 @@ function editDriver(req, res) {
     var lastname = req.body.lastname || ''
 
     if (userID === "" || firstname === "" || lastname === "") {
-        res.status(412).json({
-            "status":"412",
-            "message": "No parameters"
-        }).end()
+        res.status(412).json(new ApiResponse(412, "Missing parameters, check if userID, firstname or lastname is missing")).end()
         return
     }
 
-
     db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (error, rows, fields) {
         if (!rows[0]) {
-            res.status(412).json({
-                "status: ": "412",
-                "Message": "No user found with this ID"
-            }).end()
+            res.status(412).json(new ApiResponse(412, "No user found with this ID")).end()
         } else {
             console.log(rows)
             var query = {
@@ -153,18 +125,13 @@ function editDriver(req, res) {
             db.query(query, (err, response, fields) => {
                 if (err) {
                     console.log('error occured in editDriver query')
-                    res.status(500).json({
-                        "status: ": "500",
-                        error: err
-                    }).end()
+                    res.status(500).json(new ApiResponse(500, err)).end()
                 }
             })
             db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (error, rows, fields) {
                 console.log(rows)
             })
-            res.status(200).json({
-                status: 200
-            }).end()
+            res.status(200).json(new ApiResponse(200, "Edit succesfull")).end()
         }
     })
 
@@ -178,10 +145,7 @@ function editImei(req, res) {
     var imei = req.body.imei || ``
 
     if (!userID || !imei) {
-        res.status(412).json({
-            "status: ": "412",
-            "message": "Missing parameters, check if userID or imei is missing"
-        }).end()
+        res.status(412).json(new ApiResponse(412, "Missing parameters, check if userID or imei is missing")).end()
     }
 
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
@@ -193,27 +157,26 @@ function editImei(req, res) {
         values: [imei, userID],
         timeout: 3000
     }
+
     db.query(query, (err, response, fields) => {
         if (err) {
             console.log('error occured in editImei query')
-            res.status(500).json({
-                "status: ": "500",
-                "error": err
-            }).end()
+            res.status(500).json(new ApiResponse(500, err)).end()
         }
         console.log('editImei succesfull')
     })
+
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
         console.log(rows)
     })
-    res.status(200).json({
-        status: 200
-    }).end()
+
+    res.status(200).json(new ApiResponse(200, "Edit Succesfull")).end()
+
 }
 
 function getAllUsers(req, res) {
     db.query('SELECT user.userID, driver.driverID, user.username, driver.firstname, driver.lastname, user.imei FROM user INNER JOIN driver ON user.userID = driver.userID', function (error, rows, fields) {
-        res.status(200).json(rows).end()
+        res.status(200).json(new ApiResponse(200, rows)).end()
     })
 
 }
