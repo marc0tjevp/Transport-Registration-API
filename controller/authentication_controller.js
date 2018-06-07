@@ -36,8 +36,7 @@ function login(req, res) {
             })
             res.end()
             return
-        }
-    })
+        } else {
 
     // Execute select user query
     db.query('SELECT userID, username, password, imei FROM user WHERE username = ?', [username], function (error, rows, fields) {
@@ -50,14 +49,14 @@ function login(req, res) {
             return
         }
 
-        if(!username || !password|| !imei ){
-            res.status(401).json({
-                "status":"401",
-                "msg": "No valid credentials or imei is incorrect"
-            })
-            res.end()
-            return
-        }
+        // if(!username || !password|| !imei ){
+        //     res.status(401).json({
+        //         "status":"401",
+        //         "msg": "No valid credentials or imei is incorrect"
+        //     })
+        //     res.end()
+        //     return
+        // }
 
         
         // Check if credentials match
@@ -81,6 +80,11 @@ function login(req, res) {
             res.end()
         }
     })
+
+        }
+    })
+
+    
 
 }
 
