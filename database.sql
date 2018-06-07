@@ -60,7 +60,7 @@ INSERT INTO `driver` (`driverID`, `firstname`, `lastname`, `userID`) VALUES
 DROP TABLE IF EXISTS `cargo_user`;
 CREATE TABLE IF NOT EXISTS `cargo_user` (
   `cargoID` int(11) NOT NULL AUTO_INCREMENT,
-  `mrn` varchar(128) NOT NULL,
+  `mrn` varchar(128) NOT NULL UNIQUE,
   `driverID` int(11) NOT NULL,
   PRIMARY KEY (`cargoID`),
   CONSTRAINT `FK_cargo_user_driver` FOREIGN KEY (`driverID`) REFERENCES `driver` (`driverID`)
@@ -76,11 +76,22 @@ DROP TABLE IF EXISTS `drive_times`;
 CREATE TABLE IF NOT EXISTS `drive_times`(
   `startTime` varchar(128) NOT NULL,
   `endTime` varchar(128) NOT NULL,
-  `travelTime` varchar(128) NOT NULL,
   `mrn` varchar(128) NOT NULL,
   `driverID` int(11) NOT NULL,
   CONSTRAINT `FK_drive_times` FOREIGN KEY (`driverID`) REFERENCES `driver` (`driverID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `drive_times` (`startTime`,`endTime`, `travelTime`,`mrn`,`driverID`) VALUES
-  ('12:00', '18:00','03:45:09' ,'19NL92929212', 33);
+INSERT INTO `drive_times` (`startTime`,`endTime`,`mrn`,`driverID`) VALUES
+  ('12:00', '18:00','19NL92929212', 33);
+
+DROP TABLE IF EXISTS `location`;
+CREATE TABLE IF NOT EXISTS `location` (
+  `locationID` int(11) NOT NULL AUTO_INCREMENT,
+  `long` DECIMAL(12, 8) NOT NULL,
+  `lat` DECIMAL(12, 8) NOT NULL,
+  `dateTime` DATETIME NOT NULL,
+  `mrn` varchar(128) NOT NULL,
+  PRIMARY KEY (`locationID`),
+  CONSTRAINT `fk_cargo_user` FOREIGN KEY (`mrn`) REFERENCES `cargo_user` (`mrn`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+	
