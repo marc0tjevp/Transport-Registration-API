@@ -1,8 +1,0 @@
-{
-  "dbPort": "3306",
-  "dbHost": "localhost",
-  "dbUser": "root",
-  "dbDatabase": "mockdatabase",
-  "secretkey": "bananenZijnGezond",
-  "dbPassword": ""
-}
