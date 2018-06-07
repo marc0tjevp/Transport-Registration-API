@@ -19,9 +19,9 @@ function editUser(req, res) {
         return
     }
 
-    db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
-        console.log(rows)
-    })
+    // db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
+    //     console.log(rows)
+    // })
 
     var query = {
         sql: 'UPDATE user SET username = ?, password = ?, imei = ? WHERE userID = ?',
@@ -35,9 +35,9 @@ function editUser(req, res) {
         }
     })
 
-    db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (errorTwo, rowsTwo, fieldsTwo) {
-        console.log(rowsTwo)
-    })
+    // db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (errorTwo, rowsTwo, fieldsTwo) {
+    //     console.log(rowsTwo)
+    // })
 
     var queryTwo = {
         sql: 'UPDATE driver SET firstname = ?, lastname = ? WHERE userID = ?',
@@ -51,9 +51,9 @@ function editUser(req, res) {
         }
     })
 
-    db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (error, rows, fields) {
-        res.status(500).json(new ApiResponse(500, error)).end()
-    })
+    // db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (error, rows, fields) {
+    //     res.status(500).json(new ApiResponse(500, error)).end()
+    // })
 
     db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
         if (!error) {
