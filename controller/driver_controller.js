@@ -2,7 +2,7 @@ const drivetime = require('../model/DriveTime')
 const db = require('../database/database')
 
 function sendDriveTimes(req,res){
-    console.log('sendDriveTimes function called')
+    console.log('POST sendDriveTimes function called')
 
     //Get params from body
     let startTime = req.body.startTime;
@@ -40,10 +40,9 @@ function sendDriveTimes(req,res){
             })
             res.end()
             return
-        }
-    })
+        } else {
 
-        // Execute select user query
+                    // Execute select user query
         let query = {
             sql: 'INSERT INTO `drive_times`(startTime, endTime, travelTime, mrn, driverID) VALUES (?,?,?,?,?)',
             values: [startTime, endTime, travelTime, mrn, driverID],
@@ -66,13 +65,14 @@ function sendDriveTimes(req,res){
                 res.end()
             }
         })
-
+        }
+    })
 }
 
 function getDriveTimeID(req,res){
-    console.log('getDriveTimeID function called')
+    console.log('GET getDriveTimeID function called')
 
-    let driverID = req.body.driverID;
+    let driverID = req.params.id;
 
     //Check if param exists
     if(!driverID){
@@ -103,23 +103,22 @@ function getDriveTimeID(req,res){
             })
             res.end()
             return
-        }
-    })
-
-    db.query('SELECT * FROM drive_times WHERE driverID = ?',[driverID], function(error,rows,fields){
-        if(error){
-            res.status(400).json({
-                "Message": "An error occured in the SQL query",
-                "Error: ": error
-            })
-            res.end()
         } else {
-            res.status(200).json(rows)
-            res.end()
+            db.query('SELECT * FROM drive_times WHERE driverID = ?',[driverID], function(error,rows,fields){
+                if(error){
+                    res.status(400).json({
+                        "Message": "An error occured in the SQL query",
+                        "Error: ": error
+                    })
+                    res.end()
+                } else {
+                    res.status(200).json(rows)
+                    res.end()
+                }
+                
+            })
         }
-        
     })
-
 }
 
 module.exports = {
