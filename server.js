@@ -6,7 +6,8 @@ const bodyParser = require('body-parser')
 const expressJWT = require('express-jwt')
 const config = require('./config.json')
 const expressSwagger = require('express-swagger-generator')(app)
-const isReachable = require('is-reachable');
+const isReachable = require('is-reachable')
+const  ApiResponse = require('./model/ApiResponse')
 
 // Swagger UI
 let options = {
@@ -32,7 +33,8 @@ let options = {
     },
     basedir: __dirname, //app absolute path
     files: ['./routes/*.js', './model/*.js'] //Path to the API handle folder
-};
+}
+
 expressSwagger(options)
 
 // Route Files
@@ -50,8 +52,14 @@ app.use(bodyParser.json())
 app.use(expressJWT({
     secret: config.secret
 }).unless({
-    path: ['/auth/login', '/api/auth']
-}));
+    path: ['/auth/login', '/api/auth', '/api-docs']
+}))
+
+app.use(function (error, request, response, next) {
+    if (error.name === 'UnauthorizedError') {
+        response.status(401).send(new ApiResponse(401, "Invalid credentials, please log in again"))
+    }
+})
 
 // Enable CORS
 app.all('*', function (req, res, next) {
@@ -73,6 +81,11 @@ app.use('/customs', customs_routes)
 app.use('/admin', admin_routes)
 app.use('/drivetimes', drivetime_routes)
 app.use('/location', location_routes)
+
+// Catch 404
+app.use('*', function (req, res) {
+    res.status('404').end()
+})
 
 var server
 
