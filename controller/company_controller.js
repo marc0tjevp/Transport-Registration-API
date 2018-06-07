@@ -73,7 +73,7 @@ var registerDriver = (req, res) => {
 					} else {
 						res.status(404).json({
 							"msg": "The form with this mrn does not exists"
-						})
+						}).end()
 					}
 				})
 

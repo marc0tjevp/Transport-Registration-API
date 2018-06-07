@@ -16,8 +16,7 @@ function sendDriveTimes(req,res){
         res.status(412).json({
             "status":"412",
             "msg": "Please make sure to insert startTime,endTime, travelTime, mrn and driverID"
-        })
-        res.end()
+        }).end()
         return
     }
 
@@ -26,8 +25,7 @@ function sendDriveTimes(req,res){
         res.status(412).json({
             "status":"412",
             "msg": "Please make sure to insert startTime,endTime, travelTime, mrn and driverID"
-        })
-        res.end()
+        }).end()
         return
     }
 
@@ -37,8 +35,7 @@ function sendDriveTimes(req,res){
             res.status(401).json({
                 "status":"401",
                 "msg": "Driver does not exist"
-            })
-            res.end()
+            }).end()
             return
         } else {
 
@@ -55,14 +52,12 @@ function sendDriveTimes(req,res){
                 res.status(500).json({
                     "message": "SQL error occured",
                     "error" : error
-                }) 
-                res.end() 
+                }).end() 
             } else {
                 res.status(200).json({
                     "Message": "Succesfully added drive times",
                     "result: ": result
-                })
-                res.end()
+                }).end()
             }
         })
         }
@@ -79,8 +74,7 @@ function getDriveTimeID(req,res){
         res.status(412).json({
             "status":"412",
             "msg": "Please make sure driverID is filled in"
-        })
-        res.end()
+        }).end()
         return
     }
 
@@ -89,8 +83,7 @@ function getDriveTimeID(req,res){
         res.status(412).json({
             "status":"412",
             "msg": "Please make sure driverID is filled in"
-        })
-        res.end()
+        }).end()
         return
     }
 
@@ -100,8 +93,7 @@ function getDriveTimeID(req,res){
             res.status(401).json({
                 "status":"401",
                 "msg": "drive times for this driverID does not exist"
-            })
-            res.end()
+            }).end()
             return
         } else {
             db.query('SELECT * FROM drive_times WHERE driverID = ?',[driverID], function(error,rows,fields){
@@ -109,11 +101,9 @@ function getDriveTimeID(req,res){
                     res.status(400).json({
                         "Message": "An error occured in the SQL query",
                         "Error: ": error
-                    })
-                    res.end()
+                    }).end()
                 } else {
-                    res.status(200).json(rows)
-                    res.end()
+                    res.status(200).json(rows).end()
                 }
                 
             })

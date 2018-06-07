@@ -14,7 +14,7 @@ function login(req, res) {
         res.status(412).json({
             "status":"412",
             "msg": "please provide a username, password and IMEI to login"
-        })
+        }).end()
         return
     }
 
@@ -23,7 +23,7 @@ function login(req, res) {
         res.status(412).json({
             "status":"412",
             "msg": "please provide a username, password and IMEI to login"
-        })
+        }).end()
         return
     }
 
@@ -33,8 +33,7 @@ function login(req, res) {
             res.status(401).json({
                 "status":"401",
                 "msg": "Username does not exist"
-            })
-            res.end()
+            }).end()
             return
         } else {
 
@@ -44,8 +43,7 @@ function login(req, res) {
         console.log(rows)
         // Handle Mysql Errors
         if (error) {
-            res.status(500).json(error)
-            res.end()
+            res.status(500).json(error).end()
             return
         }
 
@@ -69,15 +67,13 @@ function login(req, res) {
             res.status(200).json({
                 "token": token,
                 "status": 200
-            })
-            res.end()
+            }).end()
 
         } else{
             res.status(401).json({
                 "status":"401",
                 "msg": "No valid credentials or imei is incorrect"
-            })
-            res.end()
+            }).end()
         }
     })
 
@@ -125,7 +121,7 @@ function register(req, res) {
         res.status(412).json({
             "status":"412",
             "msg": "please provide a username, password, firstname, lastname and IMEI to register"
-        })
+        }).end()
         return
     }
 
@@ -134,7 +130,7 @@ function register(req, res) {
         res.status(412).json({
             "status":"412",
             "msg": "Register credentials have to be 2 characters or more"
-        })
+        }).end()
         return
     }
 
@@ -146,7 +142,7 @@ function register(req, res) {
             res.status(409).json({
                 "status": "409",
                 "msg": "username is already taken"
-            })
+            }).end()
             return
         } else {
 
@@ -157,7 +153,7 @@ function register(req, res) {
                 if (error) {
                     res.json({
                         "msg": error
-                    })
+                    }).end()
                     return
                 } else {
 
@@ -176,11 +172,11 @@ function register(req, res) {
                         if (!error) {
                             res.json({
                                 "msg": "registered new user"
-                            })
+                            }).end()
                         } else {
                             res.json({
                                 "msg": error
-                            })
+                            }).end()
                         }
                     })
                 }
