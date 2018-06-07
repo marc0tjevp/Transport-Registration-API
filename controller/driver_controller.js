@@ -5,11 +5,11 @@ function sendDriveTimes(req,res){
     console.log('POST sendDriveTimes function called')
 
     //Get params from body
-    let startTime = req.body.startTime;
-    let endTime = req.body.endTime;
-    let travelTime = req.body.travelTime;
-    let mrn = req.body.mrn;
-    let driverID = req.body.driverID;
+    let startTime = req.body.startTime
+    let endTime = req.body.endTime
+    let travelTime = req.body.travelTime
+    let mrn = req.body.mrn
+    let driverID = req.body.driverID
 
     //Check if params exist
     if (!startTime || !endTime || !mrn || !driverID || !travelTime) {
@@ -98,7 +98,7 @@ function getDriveTimeID(req,res){
         } else {
             db.query('SELECT * FROM drive_times WHERE driverID = ?',[driverID], function(error,rows,fields){
                 if(error){
-                    res.status(400).json({
+                    res.status(500).json({
                         "Message": "An error occured in the SQL query",
                         "Error: ": error
                     }).end()
