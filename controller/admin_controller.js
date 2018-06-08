@@ -18,6 +18,10 @@ function editUser(req, res) {
         res.status(412).json(new ApiResponse(412, "Missing parameters, check if userId, username, password, imei, firstname or lastname is missing")).end()
         return
     }
+    if (userID == '' || username== '' || password == '' || imei == '' || firstname=='' || lastname=='') {
+        res.status(412).json(new ApiResponse(412, "Missing parameters, check if userId, username, password, imei, firstname or lastname is missing")).end()
+        return
+    }
 
     // db.query('SELECT * FROM user WHERE userID = ?', [userID], function (error, rows, fields) {
     //     console.log(rows)

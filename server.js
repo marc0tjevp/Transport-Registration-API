@@ -74,20 +74,27 @@ app.use('/admin', admin_routes)
 app.use('/drivetimes', drivetime_routes)
 app.use('/location', location_routes)
 
-var server
+// var server
 
-// Try to connect to Mock Server
-isReachable('localhost:8082').then(reachable => {
-    if (reachable) {
-        server = app.listen(8080, function () {
-            var host = server.address().address
-            var port = server.address().port
+// // Try to connect to Mock Server
+// isReachable('localhost:8082').then(reachable => {
+//     if (reachable) {
+//         server = app.listen(8080, function () {
+//             var host = server.address().address
+//             var port = server.address().port
 
-            console.log("Listening on port " + port)
-        })
-    } else {
-        console.log("Mock Server not reachable - Server not started")
-    }
+//             console.log("Listening on port " + port)
+//         })
+//     } else {
+//         console.log("Mock Server not reachable - Server not started")
+//     }
+// })
+
+var server = app.listen(8080, function () {
+    var host = server.address().address
+    var port = server.address().port
+
+    console.log("Listening on port " + port)
 })
 
 module.exports = server

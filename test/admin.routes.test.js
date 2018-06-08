@@ -10,9 +10,12 @@ var validToken
 
 describe('editUser',()=>{
 
+    validToken = 'Bearer' + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI5fQ.tcdqhtUzjxcwQCnNHQYHuFet6V2eWdfbtIa60WH36Tc"
+
     it('should return edit succesfull',(done)=>{
         chai.request(server)
         .put('/admin/edituser')
+        .set('Authorization', validToken)
         .send({
                 "userID":29,
                 "username":"BoomBoom",
@@ -23,14 +26,14 @@ describe('editUser',()=>{
         })
         .end(function(err,res){
             res.should.have.status(200)
+            done()
         })
-        done()
-
     })
 
     it('should fail on missing userID',(done)=>{
         chai.request(server)
         .put('/admin/edituser')
+        .set('Authorization', validToken)
         .send({
                 "username":"BoomBoom",
                 "password": "password",
@@ -40,13 +43,15 @@ describe('editUser',()=>{
         })
         .end(function(err,res){
             res.should.have.status(412)
+            done()
         })
-        done()
+        
     })
 
     it('should fail on missing userName',(done)=>{
         chai.request(server)
         .put('/admin/edituser')
+        .set('Authorization', validToken)
         .send({
                 "userID":29,
                 "password": "password",
@@ -56,13 +61,15 @@ describe('editUser',()=>{
         })
         .end(function(err,res){
             res.should.have.status(412)
+            done()
         })
-        done()
+        
     })
 
     it('should fail on missing password',(done)=>{
         chai.request(server)
         .put('/admin/edituser')
+        .set('Authorization', validToken)
         .send({
                 "userID":29,
                 "username":"BoomBoom",
@@ -72,13 +79,15 @@ describe('editUser',()=>{
         })
         .end(function(err,res){
             res.should.have.status(412)
+            done()
         })
-        done()
+        
     })
 
     it('should fail on missing imei',(done)=>{
         chai.request(server)
         .put('/admin/edituser')
+        .set('Authorization', validToken)
         .send({
                 "userID":29,
                 "username":"BoomBoom",
@@ -88,8 +97,9 @@ describe('editUser',()=>{
         })
         .end(function(err,res){
             res.should.have.status(412)
+            done()
         })
-        done()
+        
     })
     
     it('should fail on missing firstname',(done)=>{
@@ -102,15 +112,18 @@ describe('editUser',()=>{
                 "imei":"828282828",
                 "lastname": "AuRevoirBye"
         })
+        .set('Authorization', validToken)
         .end(function(err,res){
             res.should.have.status(412)
+            done()
         })
-        done()
+        
     })
 
     it('should fail on missing lastname',(done)=>{
         chai.request(server)
         .put('/admin/edituser')
+        .set('Authorization', validToken)
         .send({
                 "userID":29,
                 "username":"BoomBoom",
@@ -120,8 +133,9 @@ describe('editUser',()=>{
         })
         .end(function(err,res){
             res.should.have.status(412)
+            done()
         })
-        done()
+        
     })
 
 })
