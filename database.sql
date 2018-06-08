@@ -74,15 +74,16 @@ INSERT INTO `cargo_user` (`cargoID`, `mrn`, `driverID`) VALUES
 
 DROP TABLE IF EXISTS `drive_times`;
 CREATE TABLE IF NOT EXISTS `drive_times`(
-  `startTime` varchar(128) NOT NULL,
-  `endTime` varchar(128) NOT NULL,
+  `startTime` dateTime NOT NULL,
+  `endTime` dateTime NOT NULL,
+  `type` varchar(64) NOT NULL,
   `mrn` varchar(128) NOT NULL,
   `driverID` int(11) NOT NULL,
   CONSTRAINT `FK_drive_times` FOREIGN KEY (`driverID`) REFERENCES `driver` (`driverID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `drive_times` (`startTime`,`endTime`,`mrn`,`driverID`) VALUES
-  ('12:00', '18:00','19NL92929212', 33);
+INSERT INTO `drive_times` (`startTime`,`endTime`, `type`,`mrn`,`driverID`) VALUES
+  ('2018-06-07 15:30:00', '2018-06-07 23:30:00','drive' ,'19NL92929212', 33);
 
 DROP TABLE IF EXISTS `location`;
 CREATE TABLE IF NOT EXISTS `location` (

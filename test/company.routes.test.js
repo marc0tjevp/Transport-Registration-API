@@ -1,15 +1,15 @@
-const chai = require('chai')
-const chaiHttp = require('chai-http')
-const server = require('../server')
+// const chai = require('chai')
+// const chaiHttp = require('chai-http')
+// const server = require('../server')
 
-chai.should()
-chai.use(chaiHttp)
+// chai.should()
+// chai.use(chaiHttp)
 
 
-var validToken
+// var validToken
 
-describe('register driver',()=>{
+// describe('register driver',()=>{
 
-    it('should...')
+//     it('should...')
 
-})
+// })
