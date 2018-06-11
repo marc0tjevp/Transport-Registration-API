@@ -7,7 +7,7 @@ const expressJWT = require('express-jwt')
 const config = require('./config.json')
 const expressSwagger = require('express-swagger-generator')(app)
 const isReachable = require('is-reachable')
-const  ApiResponse = require('./model/ApiResponse')
+const ApiResponse = require('./model/ApiResponse')
 
 // Swagger UI
 let options = {
@@ -49,11 +49,11 @@ let location_routes = require('./routes/location_routes')
 app.use(bodyParser.json())
 
 // 
-app.use(expressJWT({
-    secret: config.secret
-}).unless({
-    path: ['/auth/login', '/api/auth', '/api-docs']
-}))
+// app.use(expressJWT({
+//     secret: config.secret
+// }).unless({
+//     path: ['/auth/login', '/api/auth', '/api-docs']
+// }))
 
 app.use(function (error, request, response, next) {
     if (error.name === 'UnauthorizedError') {
@@ -87,19 +87,20 @@ app.use('*', function (req, res) {
     res.status('404').end()
 })
 
-var server
+// Listen on 8080
+var server = app.listen(8080, function () {
+    var host = server.address().address
+    var port = server.address().port
+
+    console.log("Listening on port " + port)
+})
 
 // Try to connect to Mock Server
 isReachable('localhost:8082').then(reachable => {
     if (reachable) {
-        server = app.listen(8080, function () {
-            var host = server.address().address
-            var port = server.address().port
-
-            console.log("Listening on port " + port)
-        })
+        console.log("Mock Server is reachable")
     } else {
-        console.log("Mock Server not reachable - Server not started")
+        console.log("Mock Server not reachable")
     }
 })
 
