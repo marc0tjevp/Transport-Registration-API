@@ -1,23 +1,27 @@
 const ApiResponse = require('../model/ApiResponse')
+const db = require('../database/database')
 
 module.exports = {
 
     insertLocation(req, res) {
         let mrn = req.params.mrn
         let body = req.body
-        let lat = body.latitude || ''
-        let long = body.longitude || ''
+        let lat = body.lat || ''
+        let long = body.long || ''
         let date = body.dateTime || ''
+        console.dir(body);
         if (lat !== '' && long !== '' && date !== '') {
             db.query('SELECT * FROM cargo_user WHERE mrn = ?', [mrn], function (error, rows, fields) {
                 if (error) {
                     res.status(500).json(new ApiResponse(500, error)).end()
+                    console.dir(error)
                 } else if (rows.length > 0) {
-                    db.query('INSERT INTO location (mrn, lat, long, date) VALUES (?)', [
+                    db.query('INSERT INTO location (`mrn`, `lat`, `long`, `dateTime`) VALUES (?)', [
                         [mrn, lat, long, date]
                     ], function (error, rows, fields) {
                         if (error) {
                             res.status(500).json(new ApiResponse(500, error)).end()
+                            console.dir(error)
                         } else {
                             res.status(200).json(new ApiResponse(500, "Added location into database")).end()
                         }
