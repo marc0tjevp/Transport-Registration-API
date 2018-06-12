@@ -10,7 +10,6 @@ const ApiResponse = require('../model/ApiResponse')
 // Register a driver to a form
 var registerDriver = (req, res) => {
 
-
 	var driverID = req.body.driverID || ''
 	var mrn = req.body.mrn || ''
 
@@ -100,7 +99,24 @@ var getFormsByDriver = (req, res) => {
 	})
 }
 
+var getAllRegisteredForms = (req, res) => {
+
+	var selectQuery = {
+		sql: 'SELECT * FROM cargo_user INNER JOIN driver ON cargo_user.driverID = driver.driverID',
+		timeout: 3000
+	}
+
+	db.query(selectQuery, function (error, rows, fields) {
+		if (error) {
+			res.status(500).json(new ApiResponse(500, error)).end()
+		} else {
+			res.status(200).json(new ApiResponse(200, rows)).end()
+		}
+	})
+}
+
 module.exports = {
 	registerDriver,
-	getFormsByDriver
+	getFormsByDriver,
+	getAllRegisteredForms
 }
