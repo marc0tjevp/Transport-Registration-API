@@ -23,6 +23,9 @@ routes.get('/form/:mrn', controller.getMRNFormFromMockserver)
  */
 routes.get('/status/:mrn', controller.getStatusFromMockServer)
 
+routes.get('/form/all/:company', controller.getAllByCompany)
+
+
 /**
  * Sends a request to the mock server to change the status of the form. Returns a random status
  * @route PUT /customs/status/:mrn
