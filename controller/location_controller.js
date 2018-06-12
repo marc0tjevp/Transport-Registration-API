@@ -36,14 +36,12 @@ module.exports = {
     },
 
     getLocations(req, res) {
-
         let mrn = req.params.mrn
-
         db.query('SELECT * FROM cargo_user WHERE mrn = ?', [mrn], function (error, rows, fields) {
             if (error) {
                 res.status(500).json(error).end()
             } else if (rows.length > 0) {
-                db.query('SELECT * FROM location WHERE mrn = ?', [mrn], function (error, rows, fields) {
+                db.query('SELECT `long`, `lat`, `dateTime` FROM location WHERE mrn = ?', [mrn], function (error, rows, fields) {
                     if (error) {
                         res.status(500).json(new ApiResponse(500, error)).end()
                     } else {
