@@ -1,9 +1,11 @@
 const auth = require('../authentication/authentication')
 const db = require('../database/database')
+const ApiResponse = require('../model/ApiResponse')
 
 function login(req, res) {
 
     console.log('Login function called')
+
     // Get parameters from body
     let username = req.body.username || ''
     let password = req.body.password || ''
@@ -11,71 +13,54 @@ function login(req, res) {
 
     // Check if all parameters exist in body
     if (!password || !username || !imei) {
-        res.status(412).json({
-            "status":"412",
-            "msg": "please provide a username, password and IMEI to login"
-        }).end()
+        res.status(412).json(new ApiResponse(412, "Missing paramaters, check if username, password and imei are missing")).end()
         return
     }
 
     // Check if all paramaters are filled in
     if (password == '' || username == '' || imei == '') {
-        res.status(412).json({
-            "status":"412",
-            "msg": "please provide a username, password and IMEI to login"
-        }).end()
+        res.status(412).json(new ApiResponse(412, "Missing paramaters, check if username, password and imei are missing")).end()
         return
     }
 
     //Check if username exists
-    db.query('SELECT * FROM user WHERE username = ?', [username], function (error, rows, fields){
-        if(!rows[0]){
-            res.status(401).json({
-                "status":"401",
-                "msg": "Username does not exist"
-            }).end()
+    db.query('SELECT * FROM user WHERE username = ?', [username], function (error, rows, fields) {
+        if (!rows[0]) {
+            res.status(401).json(new ApiResponse(401, "Username does not exist")).end()
             return
         } else {
 
-    // Execute select user query
-    db.query('SELECT userID, username, password, imei FROM user WHERE username = ?', [username], function (error, rows, fields) {
+            // Execute select user query
+            db.query('SELECT userID, username, password, imei FROM user WHERE username = ?', [username], function (error, rows, fields) {
 
-        console.log(rows)
-        // Handle Mysql Errors
-        if (error) {
-            res.status(500).json(error).end()
-            return
-        }
+                console.log(rows)
+                // Handle Mysql Errors
+                if (error) {
+                    res.status(500).json(new ApiResponse(500, error)).end()
+                    return
+                }
 
-        // if(!username || !password|| !imei ){
-        //     res.status(401).json({
-        //         "status":"401",
-        //         "msg": "No valid credentials or imei is incorrect"
-        //     })
-        //     res.end()
-        //     return
-        // }
+                // if(!username || !password|| !imei ){
+                //     res.status(401).json({
+                //         "status":"401",
+                //         "msg": "No valid credentials or imei is incorrect"
+                //     })
+                //     res.end()
+                //     return
+                // }
 
-        
-        // Check if credentials match
-        if (username == rows[0].username && password == rows[0].password && imei == rows[0].imei) {
-            console.log('In the credentials match' +username + ' '+ password+ ' '+imei)
-            let token = auth.encodeToken(rows[0].userID)
 
-            console.log(rows[0])
+                // Check if credentials match
+                if (username == rows[0].username && password == rows[0].password && imei == rows[0].imei) {
+                    console.log('In the credentials match' + username + ' ' + password + ' ' + imei)
+                    let token = auth.encodeToken(rows[0].userID)
 
-            res.status(200).json({
-                "token": token,
-                "status": 200
-            }).end()
+                    res.status(200).json(new ApiResponse(200, token)).end()
 
-        } else{
-            res.status(401).json({
-                "status":"401",
-                "msg": "No valid credentials or imei is incorrect"
-            }).end()
-        }
-    })
+                } else {
+                    res.status(401).json(new ApiResponse(401, "No valid credentials or incorrect imei")).end()
+                }
+            })
 
         }
     })
@@ -104,33 +89,25 @@ function register(req, res) {
         sql: 'INSERT INTO `user`(username, password, imei) VALUES (?, ?, ?)',
         values: [username, password, imei],
         timeout: 3000
-        
+
     }
 
     // Check if all parameters exist in body
     if (!password || !username || !firstname || !lastname || !imei) {
-        res.status(412).json({
-            "status":"412",
-            "msg": "please provide a username, password, firstname, lastname and IMEI to register"
-        })
+        res.status(412).json(new ApiResponse(412, "Missing parameters, check if username, password, firstname, lastname or imei is missing")).end()
         return
     }
 
     // Check if all paramaters are filled in
     if (password == '' || username == '' || firstname == '' || lastname == '' || imei == '') {
-        res.status(412).json({
-            "status":"412",
-            "msg": "please provide a username, password, firstname, lastname and IMEI to register"
-        }).end()
+        res.status(412).json(new ApiResponse(412, "Missing parameters, check if username, password, firstname, lastname or imei is missing")).end()
+
         return
     }
 
     //Check parameter's length
-    if(username.length <2 || firstname.length <2 || lastname.length <2 || password.length <2){
-        res.status(412).json({
-            "status":"412",
-            "msg": "Register credentials have to be 2 characters or more"
-        }).end()
+    if (username.length < 2 || firstname.length < 2 || lastname.length < 2 || password.length < 2) {
+        res.status(412).json(new ApiResponse(412, "Register credentials have to be 2 characters or more")).end()
         return
     }
 
@@ -139,10 +116,7 @@ function register(req, res) {
 
         // If there is a result, the username exists
         if (rows[0]) {
-            res.status(409).json({
-                "status": "409",
-                "msg": "username is already taken"
-            }).end()
+            res.status(409).json(new ApiResponse(409, "Username is already taken")).end()
             return
         } else {
 
@@ -151,9 +125,7 @@ function register(req, res) {
 
                 // Handle MySQL Errors
                 if (error) {
-                    res.json({
-                        "msg": error
-                    }).end()
+                    res.status(500).json(new ApiResponse(500, error)).end()
                     return
                 } else {
 
@@ -170,13 +142,9 @@ function register(req, res) {
                     // Insert new user with driverID from previous query
                     db.query(queryDriver, function (error, result) {
                         if (!error) {
-                            res.json({
-                                "msg": "registered new user"
-                            }).end()
+                            res.status(200).json(new ApiResponse(200, "User has been registered")).end()
                         } else {
-                            res.json({
-                                "msg": error
-                            }).end()
+                            res.status(500).json(new ApiResponse(500, error)).end()
                         }
                     })
                 }

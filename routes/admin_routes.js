@@ -11,7 +11,9 @@ let auth = require('../controller/admin_controller')
  * @param {string} imei.required - The users GUID
  * @param {string} firstname.required - The users name
  * @param {string} lastname.required - The users lastname
- * @returns {object}  500 - Unexpected error
+ * @returns {ApiResponse.model} 200 - Edit succesfull
+ * @returns {ApiResponse.model} 412 - Missing parameters, check if userId, username, password, imei, firstname or lastname is missing
+ * @returns {ApiResponse.model} 500 - Unexpected error
  */
 routes.put('/edituser', auth.editUser)
 
@@ -21,9 +23,9 @@ routes.put('/edituser', auth.editUser)
  * @group Admin
  * @param {string} userID.required - The users ID
  * @param {string} username.required - Username
- * @return {object} 412 - Please provide an userID
- * @return {object} 200 - Succesfully delete user
- * @returns {object}  500 - Unexpected error
+ * @returns {ApiResponse.model} 412 - Missing parameters, check if userID is missing
+ * @returns {ApiResponse.model} 200 - Succesfully deleted user
+ * @returns {ApiResponse.model} 500 - Unexpected error
  */
 routes.delete('/deleteuser', auth.deleteUser)
 
@@ -34,10 +36,10 @@ routes.delete('/deleteuser', auth.deleteUser)
  * @param {string} userID.required - The users ID
  * @param {string} firstname.required - New or old firstnem
  * @param {string} lastname.required - New or old lastname
- * @return {object} 412 - No parameters
- * @return {object} 404 - No user found with this ID
- * @return {object} 200 - Edit succesfull
- * @returns {object}  500 - Unexpected error
+ * @returns {ApiResponse.model} 412 - Missing parameters, check if userID, firstname or lastname is missing
+ * @returns {ApiResponse.model} 412 - No user found with this ID
+ * @returns {ApiResponse.model} 200 - Edit succesfull
+ * @returns {ApiResponse.model} 500 - Unexpected error
  */
 routes.put('/editdriver', auth.editDriver)
 
@@ -47,9 +49,9 @@ routes.put('/editdriver', auth.editDriver)
  * @group Admin
  * @param {string} userID.required - The users ID
  * @param {string} imei.required - The users GUID
- * @return {object} 412 - Missing parameters, check if userID or imei is missing
- * @return {object} 200 - Edit succesfull
- * @returns {object}  500 - Unexpected error
+ * @returns {ApiResponse.model} 412 - Missing parameters, check if userID or imei is missing
+ * @returns {ApiResponse.model} 200 - Edit succesfull
+ * @returns {ApiResponse.model} 500 - Unexpected error
  */
 routes.put('/editimei', auth.editImei)
 
@@ -57,9 +59,8 @@ routes.put('/editimei', auth.editImei)
  * Returns a join of users and drivers
  * @route GET /admin/allusers
  * @group Admin
- * @return {object} 412 - Missing parameters, check if userID or imei is missing
- * @return {object} 200 - Edit succesfull
- * @returns {object}  500 - Unexpected error
+ * @returns {ApiResponse.model} 200 - []
+ * @returns {ApiResponse.model} 500 - Unexpected error
  */
 routes.get('/allusers', auth.getAllUsers)
 
