@@ -8,18 +8,18 @@ function sendDriveTimes(req, res) {
     //Get params from body
     let startTime = req.body.startTime
     let endTime = req.body.endTime
-    let travelTime = req.body.travelTime
+    let type = req.body.type
     let mrn = req.body.mrn
     let driverID = req.body.driverID
 
     //Check if params exist
-    if (!startTime || !endTime || !mrn || !driverID || !travelTime) {
+    if (!startTime || !endTime || !mrn || !driverID || !type) {
         res.status(412).json(new ApiResponse(412, "Please make sure to insert startTime, endTime, travelTime, mrn and driverID")).end()
         return
     }
 
     // Check if all paramaters are filled in
-    if (startTime == '' || endTime == '' || mrn == '' || driverID == '' || travelTime == '') {
+    if (startTime == '' || endTime == '' || mrn == '' || driverID == '' || type == '') {
         res.status(412).json(new ApiResponse(412, "Please make sure to insert startTime, endTime, travelTime, mrn and driverID")).end()
         return
     }
@@ -33,8 +33,8 @@ function sendDriveTimes(req, res) {
 
             // Execute select user query
             let query = {
-                sql: 'INSERT INTO `drive_times`(startTime, endTime, travelTime, mrn, driverID) VALUES (?,?,?,?,?)',
-                values: [startTime, endTime, travelTime, mrn, driverID],
+                sql: 'INSERT INTO `drive_times`(startTime, endTime, type, mrn, driverID) VALUES (?,?,?,?,?)',
+                values: [startTime, endTime, type, mrn, driverID],
                 timeout: 3000
             }
             db.query(query, function (error, result) {
@@ -77,7 +77,7 @@ function getDriveTimeID(req, res) {
                 if (error) {
                     res.status(500).json(new ApiResponse(500, error)).end()
                 } else {
-                    res.statu(200).json(new ApiResponse(200, rows)).end()
+                    res.status(200).json(new ApiResponse(200, rows)).end()
                 }
 
             })
