@@ -25,4 +25,12 @@ routes.get('/driver/get', controller.getFormsByDriver)
  */
 routes.post('/driver/register', controller.registerDriver)
 
+/**
+ * @route GET /company/driver/get
+ * @group Company - Routes used by the company
+ * @returns {ApiResponse.model} 200 - An array of forms
+ * @returns {ApiResponse.model} 500 - Unexpected error
+ */
+routes.get('/forms', controller.getAllRegisteredForms)
+
 module.exports = routes
