@@ -14,7 +14,7 @@ module.exports = {
 
         http.get({
                 hostname: 'localhost',
-                port: process.env.PORT || 8082,
+                port: 6028,
                 path: '/form/all/' + company,
                 method: 'GET',
                 agent: false,
@@ -53,7 +53,7 @@ module.exports = {
 
         http.get({
                 hostname: 'localhost',
-                port: process.env.PORT || 8082,
+                port: 6028,
                 path: '/form/' + mrn,
                 method: 'GET',
                 agent: false,
@@ -92,7 +92,7 @@ module.exports = {
 
         http.get({
                 hostname: 'localhost',
-                port: process.env.PORT || 8082,
+                port: 6028,
                 path: '/status/' + mrn,
                 method: 'GET',
                 agent: false,
@@ -140,7 +140,7 @@ module.exports = {
                 //object with all connection options
                 {
                     hostname: 'localhost',
-                    port: process.env.PORT || 8082,
+                    port: 6028,
                     path: '/status/' + mrn,
                     method: 'PUT',
                     agent: false,
