@@ -25,7 +25,7 @@ var registerDriver = (req, res) => {
 
 		http.get({
 				hostname: 'localhost',
-				port: 8082,
+				port: process.env.PORT || 8082,
 				path: '/mrn-form/' + mrn,
 				method: 'GET',
 				agent: false,
