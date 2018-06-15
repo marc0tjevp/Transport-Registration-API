@@ -52,7 +52,7 @@ app.use(bodyParser.json())
 app.use(expressJWT({
     secret: config.secret
 }).unless({
-    path: ['/auth/login', '/api/auth', '/api-docs']
+    path: ['/auth/login', '/auth/register', '/api-docs']
 }))
 
 // Catch Authorization errors
