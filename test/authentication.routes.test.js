@@ -24,8 +24,8 @@ describe('Registration', () => {
                 res.should.have.status(200)
                 res.should.be.json
                 validToken = res.body.token
+                done()
             })
-            done()
 
         // Export token to use in other tests
         module.exports = {

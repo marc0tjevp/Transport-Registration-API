@@ -41,7 +41,7 @@ routes.delete('/deleteuser', auth.deleteUser)
  * @returns {ApiResponse.model} 200 - Edit succesfull
  * @returns {ApiResponse.model} 500 - Unexpected error
  */
-routes.put('/editdriver', auth.editDriver)
+// routes.put('/editdriver', auth.editDriver)
 
 /**
  * Edits a users GUID
