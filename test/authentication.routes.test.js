@@ -220,7 +220,7 @@ describe('Login', () => {
         chai.request(server)
             .post('/auth/login')
             .send({
-                "email": "Janos",
+                "username": "Janos",
                 "password": "badstuff",
                 "imei" : "122356553"
             })
@@ -236,7 +236,7 @@ describe('Login', () => {
         chai.request(server)
             .post('/auth/login')
             .send({
-                "email": "Janos",
+                "username": "Janos",
                 "password": "password",
                 "imei" : "111111111111"
             })
