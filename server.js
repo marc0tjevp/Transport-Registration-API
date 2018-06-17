@@ -48,13 +48,14 @@ let location_routes = require('./routes/location_routes')
 // Use Body Parser to get properties from body in posts
 app.use(bodyParser.json())
 
-// 
+// Require credentials for most endpoints
 // app.use(expressJWT({
 //     secret: config.secret
 // }).unless({
-//     path: ['/auth/login', '/api/auth', '/api-docs']
+//     path: ['/auth/login', '/auth/register', '/api-docs']
 // }))
 
+// Catch Authorization errors
 app.use(function (error, request, response, next) {
     if (error.name === 'UnauthorizedError') {
         response.status(401).send(new ApiResponse(401, "Invalid credentials, please log in again"))
@@ -69,7 +70,7 @@ app.all('*', function (req, res, next) {
     next()
 })
 
-// Hello World!
+// Hello World, Used for pinging the server
 app.get('/', function (req, res, next) {
     res.send('Hello World')
 })
@@ -82,13 +83,13 @@ app.use('/admin', admin_routes)
 app.use('/drivetimes', drivetime_routes)
 app.use('/location', location_routes)
 
-// Catch 404
+// Catch 404's
 app.use('*', function (req, res) {
     res.status('404').end()
 })
 
-// Listen on 8080
-var server = app.listen(8080, function () {
+// Listen on port
+var server = app.listen(process.env.PORT || 8080, function () {
     var host = server.address().address
     var port = server.address().port
 
