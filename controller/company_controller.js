@@ -60,7 +60,7 @@ var registerDriver = (req, res) => {
 							}
 						})
 					} else {
-						res.status(404).json(new ApiResponse(404, "A form with this MRN does not exist")).end()
+						res.status(500).json(new ApiResponse(500, "Something went wrong on the mock server")).end()
 					}
 				})
 
@@ -150,6 +150,10 @@ var getFormsByDriverURL = (req, res) => {
 }
 
 var getAllRegisteredForms = (req, res) => {
+
+	// TODO: Waar status lossen_ok, is het formulier niet teruggeven
+	// Geannulleerd: 13
+	// Lossen OK: 25
 
 	var selectQuery = {
 		sql: 'SELECT * FROM cargo_user INNER JOIN driver ON cargo_user.driverID = driver.driverID',
