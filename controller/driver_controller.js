@@ -97,7 +97,43 @@ function getDriveTimeID(req, res) {
     })
 }
 
+function getDriveTimeMRN(req, res) {
+    console.log('GET getDriveTimeID function called')
+
+    let mrn = req.params.mrn;
+
+    //Check if param exists
+    if (!mrn) {
+        res.status(412).json(new ApiResponse(412, "Missing Parameters, check if driverID is missing")).end()
+        return
+    }
+
+    //Check if param is filled in
+    if (mrn == '') {
+        res.status(412).json(new ApiResponse(412, "Missing Parameters, check if driverID is missing")).end()
+        return
+    }
+
+    //Check if driveTime exists for this MRN
+    db.query('SELECT * FROM drive_times WHERE mrn = ?', [mrn], function (error, rows, fields) {
+        if (!rows[0]) {
+            res.status(401).json(new ApiResponse(401, "There are no drivetimes for this mrn")).end()
+            return
+        } else {
+            db.query('SELECT * FROM drive_times WHERE mrn = ?', [mrn], function (error, rows, fields) {
+                if (error) {
+                    res.status(500).json(new ApiResponse(500, error)).end()
+                } else {
+                    res.status(200).json(new ApiResponse(200, rows)).end()
+                }
+
+            })
+        }
+    })
+}
+
 module.exports = {
     sendDriveTimes,
-    getDriveTimeID
+    getDriveTimeID,
+    getDriveTimeMRN
 }

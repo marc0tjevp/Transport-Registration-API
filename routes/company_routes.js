@@ -44,4 +44,6 @@ routes.delete('/driver/deregister', controller.deregisterDriver)
  */
 routes.get('/forms', controller.getAllRegisteredForms)
 
+routes.get('/getbyid/:id', controller.getFormsByDriverURL)
+
 module.exports = routes
