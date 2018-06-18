@@ -64,8 +64,10 @@ function sendDriveTimes(req, res) {
 function getDriveTimeID(req, res) {
     console.log('GET getDriveTimeID function called')
 
-    let driverID = req.params.id;
-
+	let token = req.get('Authorization')
+	let subUserID = token.substring(7)
+    let decodedUserID = auth.decodeToken(subUserID)
+	let driverID = decodedUserID.sub
     //Check if param exists
     if (!driverID) {
         res.status(412).json(new ApiResponse(412, "Missing Parameters, check if driverID is missing")).end()

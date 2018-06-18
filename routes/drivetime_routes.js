@@ -27,6 +27,6 @@ routes.post('/senddrive', controller.sendDriveTimes)
  * @return {ApiResponse.model} 200 - []
  * @return {ApiResponse.model} 500 - Unexpected error
  */
-routes.get('/getdrivebyid/:id', controller.getDriveTimeID)
+routes.get('/getdrivebyid', controller.getDriveTimeID)
 
 module.exports = routes
