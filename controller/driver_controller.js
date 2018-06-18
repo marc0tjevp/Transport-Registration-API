@@ -67,21 +67,23 @@ function getDriveTimeID(req, res) {
 	let token = req.get('Authorization')
 	let subUserID = token.substring(7)
     let decodedUserID = auth.decodeToken(subUserID)
-	let driverID = decodedUserID.sub
+	let userID = decodedUserID.sub
     //Check if param exists
-    if (!driverID) {
+    if (!userID) {
         res.status(412).json(new ApiResponse(412, "Missing Parameters, check if driverID is missing")).end()
         return
     }
 
     //Check if param is filled in
-    if (driverID == '') {
+    if (userID == '') {
         res.status(412).json(new ApiResponse(412, "Missing Parameters, check if driverID is missing")).end()
         return
     }
 
     //Check if driveTime exists for this MRN
-    db.query('SELECT * FROM drive_times WHERE driverID = ?', [driverID], function (error, rows, fields) {
+	db.query('Select driverID FROM driver WHERE userID = ?', [driverID], (err,rows,fields)=>{
+		
+    db.query('SELECT * FROM drive_times WHERE driverID = ?', [rows[0].driverID], function (error, rows, fields) {
         if (!rows[0]) {
             res.status(401).json(new ApiResponse(401, "There are no drivetimes for this driver")).end()
             return
@@ -96,6 +98,7 @@ function getDriveTimeID(req, res) {
             })
         }
     })
+	})
 }
 
 module.exports = {
