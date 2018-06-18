@@ -72,6 +72,31 @@ var registerDriver = (req, res) => {
 
 }
 
+// Register a driver to a form
+var deregisterDriver = (req, res) => {
+
+	var driverID = req.body.driverID || ''
+	var mrn = req.body.mrn || ''
+
+	var deleteQuery = {
+		sql: 'DELETE FROM cargo_user WHERE mrn = ? AND driverID = ?',
+		values: [mrn, driverID],
+		timeout: 3000
+	}
+
+	if (driverID == '' || mrn == '') {
+		res.status(419).json(new ApiResponse(419, "Missing Paramters, check if driverID or mrn is missing")).end()
+	} else {
+		db.query(deleteQuery, function (error) {
+			if (error) {
+				res.status(500).json(new ApiResponse(500, err)).end()
+			} else {
+				res.status(200).json(new ApiResponse(200, "Removed driver from form")).end()
+			}
+		})
+	}
+}
+
 // Pushes the object to the JSON
 var getFormsByDriver = (req, res) => {
 
@@ -118,5 +143,6 @@ var getAllRegisteredForms = (req, res) => {
 module.exports = {
 	registerDriver,
 	getFormsByDriver,
-	getAllRegisteredForms
+	getAllRegisteredForms,
+	deregisterDriver
 }

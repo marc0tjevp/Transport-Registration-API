@@ -26,6 +26,17 @@ routes.get('/driver/get', controller.getFormsByDriver)
 routes.post('/driver/register', controller.registerDriver)
 
 /**
+ * @route POST /company/driver/unregister
+ * @group Company - Routes used by the company
+ * @param {int} driverID.required - The driverID is used to connect the cargo and the driver
+ * @param {string} mrn.required - The MRN is used to check if the cargo exists, if it does it gets connected to the driver
+ * @returns {ApiResponse.model} 200 - Removed driver from form
+ * @returns {ApiResponse.model} 419 - Missing Paramters, check if driverID or mrn is missing
+ * @returns {ApiResponse.model} 500 - Unexpected error
+ */
+routes.delete('/driver/deregister', controller.deregisterDriver)
+
+/**
  * @route GET /company/driver/get
  * @group Company - Routes used by the company
  * @returns {ApiResponse.model} 200 - An array of forms
