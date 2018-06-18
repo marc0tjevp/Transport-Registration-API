@@ -99,6 +99,31 @@ var getFormsByDriver = (req, res) => {
 	})
 }
 
+var getFormsByDriverURL = (req, res) => {
+
+	var driverID = req.params.id
+
+	if (driverID == '') {
+		res.status(419).json(new ApiResponse(419, "Missing Parameters, check if userID is missing")).end()
+	}
+
+	var selectQuery = {
+		sql: 'SELECT * FROM cargo_user WHERE driverID = ?',
+		values: [driverID],
+		timeout: 3000
+	}
+
+	db.query(selectQuery, function (error, rows, fields) {
+		if (error) {
+			res.status(500).json(new ApiResponse(500, error)).end()
+		} else {
+			res.status(200).json(new ApiResponse(200, rows)).end()
+		}
+		console.log(rows)
+	})
+	
+}
+
 var getAllRegisteredForms = (req, res) => {
 
 	var selectQuery = {
@@ -118,5 +143,6 @@ var getAllRegisteredForms = (req, res) => {
 module.exports = {
 	registerDriver,
 	getFormsByDriver,
-	getAllRegisteredForms
+	getAllRegisteredForms,
+	getFormsByDriverURL
 }
