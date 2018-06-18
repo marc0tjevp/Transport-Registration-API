@@ -8,8 +8,8 @@ function sendDriveTimes(req, res) {
 
     var token = req.get('Authorization')
     var subtoken = token.substr(7)
-	var decodedtoken = auth.decodeToken(subtoken)
-	var userID = decodedtoken.sub
+    var decodedtoken = auth.decodeToken(subtoken)
+    var userID = decodedtoken.sub
 
     //Get params from body
     let startTime = req.body.startTime
@@ -29,71 +29,80 @@ function sendDriveTimes(req, res) {
         return
     }
 
-    db.query('SELECT * FROM driver WHERE userID = ?',[userID], function(err,row,field){
+    db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (err, row, field) {
         let driverID = row[0].driverID
 
         //Check if driver exists
         db.query('SELECT * FROM driver WHERE driverID = ?', [driverID], function (error, rows, fields) {
-        if (!rows[0]) {
-        res.status(401).json(new ApiResponse(401, "Driver does not exist")).end()
-        return
-        } else {
-
-        // Execute select user query
-        let query = {
-            sql: 'INSERT INTO `drive_times`(startTime, endTime, type, mrn, driverID) VALUES (?,?,?,?,?)',
-            values: [startTime, endTime, type, mrn, driverID],
-            timeout: 3000
-        }
-        db.query(query, function (error, result) {
-
-            // Handle Mysql Errors
-            if (error) {
-                res.status(500).json(new ApiResponse(500, error)).end()
+            if (!rows[0]) {
+                res.status(401).json(new ApiResponse(401, "Driver does not exist")).end()
+                return
             } else {
-                res.status(200).json(new ApiResponse(200, "Succesfully added drive times")).end()
+
+                // Execute select user query
+                let query = {
+                    sql: 'INSERT INTO `drive_times`(startTime, endTime, type, mrn, driverID) VALUES (?,?,?,?,?)',
+                    values: [startTime, endTime, type, mrn, driverID],
+                    timeout: 3000
+                }
+                db.query(query, function (error, result) {
+
+                    // Handle Mysql Errors
+                    if (error) {
+                        res.status(500).json(new ApiResponse(500, error)).end()
+                    } else {
+                        res.status(200).json(new ApiResponse(200, "Succesfully added drive times")).end()
+                    }
+                })
             }
         })
-    }
-})
 
     })
 
-    
+
 }
 
 function getDriveTimeID(req, res) {
     console.log('GET getDriveTimeID function called')
 
-    let driverID = req.params.id;
+    var token = req.get('Authorization')
+    var subtoken = token.substr(7)
+    var decodedtoken = auth.decodeToken(subtoken)
+    var userID = decodedtoken.sub
 
     //Check if param exists
-    if (!driverID) {
+    if (!userID) {
         res.status(412).json(new ApiResponse(412, "Missing Parameters, check if driverID is missing")).end()
         return
     }
 
     //Check if param is filled in
-    if (driverID == '') {
+    if (userID == '') {
         res.status(412).json(new ApiResponse(412, "Missing Parameters, check if driverID is missing")).end()
         return
     }
 
-    //Check if driveTime exists for this MRN
-    db.query('SELECT * FROM drive_times WHERE driverID = ?', [driverID], function (error, rows, fields) {
-        if (!rows[0]) {
-            res.status(401).json(new ApiResponse(401, "There are no drivetimes for this driver")).end()
-            return
-        } else {
-            db.query('SELECT * FROM drive_times WHERE driverID = ?', [driverID], function (error, rows, fields) {
-                if (error) {
-                    res.status(500).json(new ApiResponse(500, error)).end()
-                } else {
-                    res.status(200).json(new ApiResponse(200, rows)).end()
-                }
+    db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (err, row, field) {
 
-            })
-        }
+        // Get driverID
+        let driverID = row[0].driverID
+
+        //Check if driveTime exists for this MRN
+        db.query('SELECT * FROM drive_times WHERE driverID = ?', [driverID], function (error, rows, fields) {
+            if (!rows[0]) {
+                res.status(401).json(new ApiResponse(401, "There are no drivetimes for this driver")).end()
+                return
+            } else {
+                db.query('SELECT * FROM drive_times WHERE driverID = ?', [driverID], function (error, rows, fields) {
+                    if (error) {
+                        res.status(500).json(new ApiResponse(500, error)).end()
+                    } else {
+                        res.status(200).json(new ApiResponse(200, rows)).end()
+                    }
+
+                })
+            }
+        })
     })
 }
 
