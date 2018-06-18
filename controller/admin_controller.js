@@ -39,12 +39,12 @@ function editUser(req, res) {
             db.query(queryTwo, (err, response, fields) => {
                 if (err) {
                     res.status(500).json(new ApiResponse(500, err)).end()
-                } else{
+                } else {
                     res.status(200).json(new ApiResponse(200, "Edit succesfull")).end()
                 }
             })
         }
-    })   
+    })
 
     // db.query('SELECT * FROM driver WHERE userID = ?', [userID], function (error, rows, fields) {
     //     res.status(500).json(new ApiResponse(500, error)).end()
@@ -169,7 +169,15 @@ function getAllUsers(req, res) {
     db.query('SELECT user.userID, driver.driverID, user.username, driver.firstname, driver.lastname, user.imei FROM user INNER JOIN driver ON user.userID = driver.userID', function (error, rows, fields) {
         res.status(200).json(new ApiResponse(200, rows)).end()
     })
+}
 
+function getUserByDriverID(req, res) {
+
+    var driverID = req.params.id
+
+    db.query('SELECT user.userID, driver.driverID, user.username, driver.firstname, driver.lastname, user.imei FROM user INNER JOIN driver ON user.userID = driver.userID WHERE driverID = ?', [driverID], function (error, rows, fields) {
+        res.status(200).json(new ApiResponse(200, rows[0])).end()
+    })
 }
 
 module.exports = {
@@ -177,5 +185,6 @@ module.exports = {
     deleteUser,
     // editDriver,
     editImei,
-    getAllUsers
+    getAllUsers,
+    getUserByDriverID
 }
