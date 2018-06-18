@@ -29,4 +29,6 @@ routes.post('/senddrive', controller.sendDriveTimes)
  */
 routes.get('/getdrivebyid/:id', controller.getDriveTimeID)
 
+routes.get('/getdrivebymrn/:mrn',controller.getDriveTimeMRN)
+
 module.exports = routes
