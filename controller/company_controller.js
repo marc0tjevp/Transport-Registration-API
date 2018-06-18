@@ -169,7 +169,6 @@ module.exports = {
 	registerDriver,
 	getFormsByDriver,
 	getAllRegisteredForms,
-	deregisterDriver
-	getAllRegisteredForms,
+	deregisterDriver,
 	getFormsByDriverURL
 }

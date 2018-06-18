@@ -17,6 +17,7 @@ let auth = require('../controller/admin_controller')
  */
 routes.put('/edituser', auth.editUser)
 
+
 /**
  * Delete a user
  * @route DELETE /admin/deleteuser
@@ -63,5 +64,15 @@ routes.put('/editimei', auth.editImei)
  * @returns {ApiResponse.model} 500 - Unexpected error
  */
 routes.get('/allusers', auth.getAllUsers)
+
+/**
+ * Returns a user by ID
+ * @route GET /admin/allusers
+ * @group Admin
+ * @param {string} userID.required - The users ID
+ * @returns {ApiResponse.model} 200 - User and Driver properties
+ * @returns {ApiResponse.model} 500 - Unexpected error
+ */
+routes.get('/driver/:id', auth.getUserByDriverID)
 
 module.exports = routes
