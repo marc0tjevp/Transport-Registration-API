@@ -1,6 +1,7 @@
 const drivetime = require('../model/DriveTime')
 const db = require('../database/database')
 const ApiResponse = require('../model/ApiResponse')
+const auth = require('../authentication/authentication')
 
 function sendDriveTimes(req, res) {
     console.log('POST sendDriveTimes function called')
