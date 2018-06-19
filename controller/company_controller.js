@@ -143,8 +143,8 @@ var getFormsByDriver = (req, res) => {
 						// The whole response has been received. Print out the result.
 						resp.on('end', () => {
 							let newdata = JSON.parse(data)
-							if (newdata.declarationStatus == 8) {
-								console.log('skipping status 8')
+							if (newdata.declarationStatus == 25) {
+								console.log('skipping status 25')
 							} else if (newdata.declarationStatus == 13) {
 								console.log('skipping status 13')
 							} else {
