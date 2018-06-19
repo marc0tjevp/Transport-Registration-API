@@ -138,7 +138,7 @@ function getDriveTimeMRN(req, res) {
 
             })
         }
-    })
+    }) 
 }
 
 module.exports = {

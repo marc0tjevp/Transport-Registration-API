@@ -2,6 +2,7 @@ let routes = require('express').Router()
 let controller = require('../controller/company_controller')
 
 /**
+ * Returns all forms that are assigned to the user, with the exception of forms with status 8 and 13
  * @route GET /company/driver/get
  * @group Company - Routes used by the company
  * @param {id} userID.required - The userID is extracted from the JWT token
@@ -12,6 +13,7 @@ let controller = require('../controller/company_controller')
 routes.get('/driver/get', controller.getFormsByDriver)
 
 /**
+ * Register a driver to an existing MRN
  * @route POST /company/driver/register
  * @group Company - Routes used by the company
  * @param {int} driverID.required - The driverID is used to connect the cargo and the driver
@@ -26,6 +28,7 @@ routes.get('/driver/get', controller.getFormsByDriver)
 routes.post('/driver/register', controller.registerDriver)
 
 /**
+ * Remove a driver from an already assigned MRN
  * @route POST /company/driver/unregister
  * @group Company - Routes used by the company
  * @param {int} driverID.required - The driverID is used to connect the cargo and the driver
@@ -37,13 +40,21 @@ routes.post('/driver/register', controller.registerDriver)
 routes.delete('/driver/deregister', controller.deregisterDriver)
 
 /**
- * @route GET /company/driver/get
+ * Get all registered forms
+ * @route GET /company/forms
  * @group Company - Routes used by the company
  * @returns {ApiResponse.model} 200 - An array of forms
  * @returns {ApiResponse.model} 500 - Unexpected error
  */
 routes.get('/forms', controller.getAllRegisteredForms)
 
+/**
+ * Get all registered form by ID, from JWT Token
+ * @route GET /company/getbyid/:id
+ * @group Company - Routes used by the company
+ * @returns {ApiResponse.model} 200 - An array of forms
+ * @returns {ApiResponse.model} 500 - Unexpected error
+ */
 routes.get('/getbyid/:id', controller.getFormsByDriverURL)
 
 module.exports = routes

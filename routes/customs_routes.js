@@ -23,6 +23,13 @@ routes.get('/form/:mrn', controller.getMRNFormFromMockserver)
  */
 routes.get('/status/:mrn', controller.getStatusFromMockServer)
 
+/**
+ * Get all forms that are assigned to the company
+ * @route GET /customs/form/all/:company
+ * @group Company - Routes used by the company
+ * @returns {ApiResponse.model} 200 - An array of forms
+ * @returns {ApiResponse.model} 500 - Unexpected error
+ */
 routes.get('/form/all/:company', controller.getAllByCompany)
 
 /**
