@@ -100,6 +100,8 @@ var deregisterDriver = (req, res) => {
 // Pushes the object to the JSON
 var getFormsByDriver = (req, res) => {
 
+	let tempArray = []
+
 	var token = req.get('Authorization')
 	var subtoken = token.substr(7)
 	var decodedtoken = auth.decodeToken(subtoken)
@@ -119,10 +121,50 @@ var getFormsByDriver = (req, res) => {
 		if (error) {
 			res.status(500).json(new ApiResponse(500, error)).end()
 		} else {
-			res.status(200).json(new ApiResponse(200, rows)).end()
+			rows.forEach(function (row) {
+				http.get({
+						hostname: 'localhost',
+						port: 8082,
+						path: '/form/' + row.mrn,
+						method: 'GET',
+						agent: false,
+						headers: {
+							'Content-Type': 'application/json',
+							'x-access-token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjE5fQ.cv-MO8XXAjdVbxMaGUfYguhsvnp4FCxk7DBlEv81bZg'
+						}
+					}, (resp) => {
+						let data = ''
+
+						// gets all data
+						resp.on('data', (chunk) => {
+							data += chunk;
+						})
+
+						// The whole response has been received. Print out the result.
+						resp.on('end', () => {
+							let newdata = JSON.parse(data)
+							if (newdata.declarationStatus == 8) {
+								console.log('skipping status 8')
+							} else if (newdata.declarationStatus == 13) {
+								console.log('skipping status 13')
+							} else {
+								tempArray.push(row)
+								console.log('adding entry because it has status ' + newdata.declarationStatus)
+							}
+							res.status(200).json(new ApiResponse(200, tempArray)).end()
+						})
+
+					})
+					.on("error", (err) => {
+						res.status(500).json(new ApiResponse(500, err)).end()
+					})
+			})
 		}
 	})
 }
+
+
+
 
 var getFormsByDriverURL = (req, res) => {
 
@@ -146,14 +188,10 @@ var getFormsByDriverURL = (req, res) => {
 		}
 		console.log(rows)
 	})
-	
+
 }
 
 var getAllRegisteredForms = (req, res) => {
-
-	// TODO: Waar status lossen_ok, is het formulier niet teruggeven
-	// Geannulleerd: 13
-	// Lossen OK: 25
 
 	var selectQuery = {
 		sql: 'SELECT * FROM cargo_user INNER JOIN driver ON cargo_user.driverID = driver.driverID',

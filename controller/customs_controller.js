@@ -36,7 +36,6 @@ module.exports = {
                 })
 
             })
-
             .on("error", (err) => {
                 res.status(500).json(new ApiResponse(500, err)).end()
             })
