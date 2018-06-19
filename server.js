@@ -49,11 +49,11 @@ let location_routes = require('./routes/location_routes')
 app.use(bodyParser.json())
 
 // Require credentials for most endpoints
-app.use(expressJWT({
-    secret: config.secret
-}).unless({
-    path: ['/auth/login', '/auth/register', '/api-docs']
-}))
+// app.use(expressJWT({
+//     secret: config.secret
+// }).unless({
+//     path: ['/auth/login', '/auth/register', '/api-docs']
+// }))
 
 // Catch Authorization errors
 app.use(function (error, request, response, next) {
@@ -85,7 +85,7 @@ app.use('/location', location_routes)
 
 // Catch 404's
 app.use('*', function (req, res) {
-    res.status('404').end()
+    res.status('404').json(new ApiResponse(404, "Page not found")).end()
 })
 
 // Listen on port

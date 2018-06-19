@@ -29,4 +29,16 @@ routes.post('/senddrive', controller.sendDriveTimes)
  */
 routes.get('/getdrivebyid', controller.getDriveTimeID)
 
+/**
+ * Gets all drivetimes for a specific cargo
+ * @route GET /drivetimes/getdrivebymrn/:mrn
+ * @group Drive Times
+ * @param {string} mrn.required
+ * @return {ApiResponse.model} 412 - Missing Parameters, check if mrn is missing
+ * @return {ApiResponse.model} 401 - There are no drivetimes for this driver
+ * @return {ApiResponse.model} 200 - []
+ * @return {ApiResponse.model} 500 - Unexpected error
+ */
+routes.get('/getdrivebymrn/:mrn',controller.getDriveTimeMRN)
+
 module.exports = routes

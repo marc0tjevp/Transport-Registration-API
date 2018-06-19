@@ -36,7 +36,6 @@ module.exports = {
                 })
 
             })
-
             .on("error", (err) => {
                 res.status(500).json(new ApiResponse(500, err)).end()
             })
@@ -53,7 +52,7 @@ module.exports = {
 
         http.get({
                 hostname: 'localhost',
-                port: 6028,
+                port: 8082,
                 path: '/form/' + mrn,
                 method: 'GET',
                 agent: false,
@@ -92,7 +91,7 @@ module.exports = {
 
         http.get({
                 hostname: 'localhost',
-                port: 6028,
+                port: 8082,
                 path: '/status/' + mrn,
                 method: 'GET',
                 agent: false,
@@ -140,7 +139,7 @@ module.exports = {
                 //object with all connection options
                 {
                     hostname: 'localhost',
-                    port: 6028,
+                    port: 8082,
                     path: '/status/' + mrn,
                     method: 'PUT',
                     agent: false,

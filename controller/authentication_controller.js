@@ -4,8 +4,6 @@ const ApiResponse = require('../model/ApiResponse')
 
 function login(req, res) {
 
-    console.log('Login function called')
-
     // Get parameters from body
     let username = req.body.username || ''
     let password = req.body.password || ''
@@ -33,26 +31,14 @@ function login(req, res) {
             // Execute select user query
             db.query('SELECT userID, username, password, imei FROM user WHERE username = ?', [username], function (error, rows, fields) {
 
-                console.log(rows)
                 // Handle Mysql Errors
                 if (error) {
                     res.status(500).json(new ApiResponse(500, error)).end()
                     return
                 }
 
-                // if(!username || !password|| !imei ){
-                //     res.status(401).json({
-                //         "status":"401",
-                //         "msg": "No valid credentials or imei is incorrect"
-                //     })
-                //     res.end()
-                //     return
-                // }
-
-
                 // Check if credentials match
                 if (username == rows[0].username && password == rows[0].password && imei == rows[0].imei) {
-                    console.log('In the credentials match' + username + ' ' + password + ' ' + imei)
                     let token = auth.encodeToken(rows[0].userID)
 
                     res.status(200).json(new ApiResponse(200, token)).end()
