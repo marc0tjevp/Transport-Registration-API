@@ -107,6 +107,8 @@ var getFormsByDriver = (req, res) => {
 	var decodedtoken = auth.decodeToken(subtoken)
 	var userID = decodedtoken.sub
 
+	let iteration = 0;
+
 	if (userID == '') {
 		res.status(419).json(new ApiResponse(419, "Missing Parameters, check if userID is missing")).end()
 	}
@@ -151,7 +153,11 @@ var getFormsByDriver = (req, res) => {
 								tempArray.push(row)
 								console.log('adding entry because it has status ' + newdata.declarationStatus)
 							}
-							res.status(200).json(new ApiResponse(200, tempArray)).end()
+							iteration++;
+							if(rows.length == iteration){
+								res.status(200).json(new ApiResponse(200, tempArray)).end()
+							}
+							
 						})
 
 					})
